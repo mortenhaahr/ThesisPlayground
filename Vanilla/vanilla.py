@@ -17,7 +17,7 @@ if __name__ == "__main__":
     parser = ArgumentParser()
     parser.add_argument("--hidden_dim", default=32, type=int)
     parser.add_argument("--n_layers", default=5, type=int)
-    parser.add_argument("--device", choices=["cpu", "cuda"], default="cpu")
+    parser.add_argument("--device", choices=["cpu", "cuda"], default="cuda")
     parser.add_argument("--model", choices=["vanilla"], default="vanilla")
     parser.add_argument("--n_epochs", default=20000, type=int)
     parser.add_argument("--step_size", default=0.1, type=float)
@@ -40,6 +40,7 @@ if __name__ == "__main__":
     model = args.model
     n_epochs = args.n_epochs
     device = args.device
+    torch.set_default_device(device)
     subsample_every = int(2.5 / step_size)
 
     ############### Define Derivative ###############
@@ -65,7 +66,7 @@ if __name__ == "__main__":
             layers.extend([nn.Linear(hidden_dim, hidden_dim), nn.Softplus()])
         layers.append(nn.Linear(hidden_dim, output_dim))
 
-        net = nn.Sequential(*layers).double().to(device)
+        net = nn.Sequential(*layers).double()
 
         def xavier_init(module):
             for m in module.modules():
@@ -77,11 +78,11 @@ if __name__ == "__main__":
     
     ############### Modelling ####################
 
-    t = torch.tensor(t_eval, device=device, requires_grad=True)
+    t = torch.tensor(t_eval, requires_grad=True)
     losses = defaultdict(lambda: defaultdict(list))
 
-    y_train = torch.tensor(res.y[:, ::subsample_every]).to(device)
-    t_train = torch.tensor(t_eval[::subsample_every], requires_grad=True).to(device)
+    y_train = torch.tensor(res.y[:, ::subsample_every])
+    t_train = torch.tensor(t_eval[::subsample_every], requires_grad=True)
 
     nn_vanilla = construct_network(1,2)
     opt_vanilla = torch.optim.Adam(nn_vanilla.parameters())
@@ -108,7 +109,6 @@ if __name__ == "__main__":
     ############### Plot ###############
 
     def plot_colored(ax, x, y, c, cmap=plt.cm.jet, steps=10, **kwargs):
-        a = c.size
         c = np.asarray(c)
         c -= c.min()
         c = c / c.max()
