@@ -89,6 +89,7 @@ if __name__ == "__main__":
     y_train = torch.tensor(y_true[:, ::subsample_every]).to(DEVICE)
     t_train = torch.tensor(t_eval[::subsample_every], requires_grad=True).to(DEVICE)
     d_omega_pred = None
+    print(y_train)
 
     nn = make_nn()
     optim = torch.optim.Adam(nn.parameters())
@@ -101,7 +102,7 @@ if __name__ == "__main__":
         optim.step()
         nn.zero_grad()
         losses.append(loss_collocation.item())
-        
+
     y_pred = nn(t.unsqueeze(-1)).detach().cpu().T  # Make predictions, detach tensor from graph, move to cpu and transpose
 
     ############### Print ###############
