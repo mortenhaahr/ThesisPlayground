@@ -7,7 +7,27 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 DEVICE = "cpu"
-MODEL = "vanilla"
+MODEL = "autodiff"
+
+
+class WeightedLoss(torch.nn.Module):
+    """A loss function that calculates the losses with certain weights attached"""
+
+    def __init__(self, eps=1e-11):
+        super().__init__()
+        self.eps = eps
+
+    def forward(self, yhat, y):
+        w0 = 1
+        w1 = 1
+
+        criterion = torch.nn.MSELoss()
+        loss0 = criterion(yhat[0], y[0]) * w0
+        loss1 = criterion(yhat[1], y[1]) * w1
+        # print(loss0)
+        # print(loss1)
+        # loss = loss * weights
+        return loss0 + loss1 + self.eps
 
 
 # plot loss functions as function of training steps
@@ -38,21 +58,28 @@ def plot_sample_points(t_vals, sample_points, ax):
     )
 
 
-def make_nn(N_inputs, N_outputs):
+def make_nn(input_dim, output_dim):
     hidden_dim = 32
     hidden_layers = 5
 
     # Create input layer with `N_inputs` and `hidden_dim` outputs. Apply softplus.
-    layers = [torch.nn.Linear(N_inputs, hidden_dim), torch.nn.Softplus()]
+    layers = [torch.nn.Linear(input_dim, hidden_dim), torch.nn.Softplus()]
     for _ in range(hidden_layers):
         layers.extend([torch.nn.Linear(hidden_dim, hidden_dim), torch.nn.Softplus()])
-    layers.append(torch.nn.Linear(hidden_dim, N_outputs))
+    layers.append(torch.nn.Linear(hidden_dim, output_dim))
     net = torch.nn.Sequential(*layers).double().to(DEVICE)
     return net
 
 
+# `torch.autograd.grad` supports only lists of scalar values (e.g. single evaluation of network).
+# however the function accepts a list of these.
+# (Converts tensor with list to list of tensors)
+def listify(A):
+    return [a for a in A.flatten()]
+
+
 def main():
-    y0 = [0, 0, 0.001]  # Start at 0, driving with 0 m/s, accelerating with 1 mm/s²
+    y0 = [0, 0, 0.01]  # Start at 0, driving with 0 m/s, accelerating with 1 mm/s²
     step_size = 10.0  # [s]
     t_start = 0
     t_end = 2000
@@ -62,7 +89,7 @@ def main():
 
     # Formula for position and velocity
     pos = lambda t: y0[0] + t * y0[1] + 1 / 2 * y0[2] * t**2
-    vel = lambda t: y0[2] * t
+    vel = lambda t: y0[1] + y0[2] * t
 
     y_true = np.array([[pos(t) for t in t_eval], [vel(t) for t in t_eval]])
 
@@ -70,26 +97,60 @@ def main():
     y_train = torch.tensor(y_true[:, ::subsample_every]).to(DEVICE)
     t_train = torch.tensor(t_eval[::subsample_every], requires_grad=True).to(DEVICE)
 
+    output_dim = 2 if MODEL == "vanilla" else 1
+    nn = make_nn(1, output_dim)
+    optim = torch.optim.Adam(nn.parameters())
     losses = []
-    if MODEL == "vanilla":
-        nn = make_nn(1, 2)
-        optim = torch.optim.Adam(nn.parameters())
-        for epoch in tqdm(range(N_epochs), desc="vanilla: training epoch"):
-            out = nn(t_train.unsqueeze(-1)).T
-            loss_collocation = torch.nn.functional.mse_loss(out, y_train)
-            loss_collocation.backward()
-            optim.step()
-            nn.zero_grad()
-            losses.append(loss_collocation.item())
 
-    y_pred = (
-        nn(t.unsqueeze(-1)).detach().cpu().T
-    )  # Make predictions, detach tensor from graph, move to cpu and transpose
+    loss_func = WeightedLoss()
+
+    for epoch in tqdm(range(N_epochs), desc=f"{MODEL}: training epoch"):
+        out = None
+        if MODEL == "vanilla":
+            out = nn(t_train.unsqueeze(-1)).T
+        elif MODEL == "autodiff":
+            theta_pred = nn(t_train.unsqueeze(-1)).T
+            theta_tmp = listify(theta_pred)
+            # [0] since we differentiate with respect to an "single input",
+            # which is coincidentially a tensor.
+            # in this case  ω ≜ dθ
+            omega_pred = torch.autograd.grad(
+                theta_tmp,
+                t_train,
+                only_inputs=True,
+                retain_graph=True,
+                create_graph=True,
+            )[0].unsqueeze(0)
+            out = torch.cat((theta_pred, omega_pred), dim=0)
+        loss_collocation = loss_func(out, y_train)
+        loss_collocation.backward()
+
+        if MODEL == "autodiff":
+            # sanity check
+            max_grad = next(nn.modules())[0].weight.grad.max()
+            assert (
+                max_grad != 0.0
+            ), "maximal gradient of first layer was zero, something is up!"
+
+        optim.step()
+        nn.zero_grad()
+        losses.append(loss_collocation.item())
+
+    # y_pred = None
+    if MODEL == "vanilla":
+        y_pred = (
+            nn(t.unsqueeze(-1)).detach().cpu().T
+        )  # Make predictions, detach tensor from graph, move to cpu and transpose
+    elif MODEL == "autodiff":
+        x_pred = nn(t.unsqueeze(-1)).T
+        x_tmp = listify(x_pred)
+        v_pred = torch.autograd.grad(x_tmp, t, only_inputs=True)[0].unsqueeze(0)
+        y_pred = torch.cat((x_pred, v_pred), dim=0).detach().cpu()
 
     ############### Print ###############
 
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
-    fig.canvas.manager.set_window_title("Vanilla model")
+    fig.canvas.manager.set_window_title(f"{MODEL} model")
     plot_prediction(t_eval, y_pred[0], y_true[0], "x(t)", ax1, "b")
     plot_prediction(t_eval, y_pred[1], y_true[1], "v(t)", ax2, "r")
 
@@ -102,7 +163,7 @@ def main():
     ax1.legend()
     plt.tight_layout()
 
-    plot_losses("Loss vanilla", losses)
+    plot_losses(f"Loss {MODEL}", losses)
 
     plt.show()
 
