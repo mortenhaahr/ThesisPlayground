@@ -91,7 +91,7 @@ def main():
     pos = lambda t: y0[0] + t * y0[1] + 1 / 2 * y0[2] * t**2
     vel = lambda t: y0[1] + y0[2] * t
 
-    y_true = np.array([[pos(t) for t in t_eval], [vel(t) for t in t_eval]])
+    y_true = torch.tensor(np.array([[pos(t) for t in t_eval], [vel(t) for t in t_eval]]))
 
     t = torch.tensor(t_eval, device="cpu", requires_grad=True)
     y_train = torch.tensor(y_true[:, ::subsample_every]).to(DEVICE)
@@ -102,7 +102,10 @@ def main():
     optim = torch.optim.Adam(nn.parameters())
     losses = []
 
-    loss_func = WeightedLoss()
+    if MODEL == "pinn":
+        loss_func = torch.nn.functional.mse_loss
+    else:
+        loss_func = WeightedLoss()
 
     for epoch in tqdm(range(N_epochs), desc=f"{MODEL}: training epoch"):
         out = None
@@ -122,10 +125,40 @@ def main():
                 create_graph=True,
             )[0].unsqueeze(0)
             out = torch.cat((theta_pred, omega_pred), dim=0)
-        loss_collocation = loss_func(out, y_train)
+        elif MODEL == "pinn":
+            # When calculating equation loss we use the full time scale.
+            # This is OK as long as we don't use the true-values.
+            # (We can always make a time-axis...)
+            t_train_dense = torch.tensor(t_eval, requires_grad=True).to(DEVICE)
+            theta_pred = nn(t_train_dense.unsqueeze(-1)).T
+            theta_tmp = listify(theta_pred)
+
+            omega_pred = torch.autograd.grad(
+                theta_tmp,
+                t_train_dense,
+                only_inputs=True,
+                retain_graph=True,
+                create_graph=True,
+            )[0].unsqueeze(0)
+
+            # Enforce relation that position can be calculated through
+            # x_0 + v_0*t + 1/2 a * t^2 but also x_0 + 1/2(v_0 + v)*t
+            theta_eq = (
+                theta_pred[0] + 1 / 2 * (omega_pred[0] + omega_pred) * t_train_dense
+            )
+            loss_equation = loss_func(theta_pred, theta_eq)
+
+            # collocation loss only used training data
+            theta_omega_dense = torch.cat((theta_pred, omega_pred), dim=0)
+            out = theta_omega_dense[:, ::subsample_every]
+
+        if MODEL == "pinn":
+            loss_collocation = loss_func(out, y_train) + loss_equation
+        else:
+            loss_collocation = loss_func(out, y_train)
         loss_collocation.backward()
 
-        if MODEL == "autodiff":
+        if MODEL == "autodiff" or MODEL == "pinn":
             # sanity check
             max_grad = next(nn.modules())[0].weight.grad.max()
             assert (
@@ -136,18 +169,18 @@ def main():
         nn.zero_grad()
         losses.append(loss_collocation.item())
 
-    # y_pred = None
     if MODEL == "vanilla":
         y_pred = (
             nn(t.unsqueeze(-1)).detach().cpu().T
         )  # Make predictions, detach tensor from graph, move to cpu and transpose
-    elif MODEL == "autodiff":
+    elif MODEL == "autodiff" or MODEL == "pinn":
         x_pred = nn(t.unsqueeze(-1)).T
         x_tmp = listify(x_pred)
         v_pred = torch.autograd.grad(x_tmp, t, only_inputs=True)[0].unsqueeze(0)
         y_pred = torch.cat((x_pred, v_pred), dim=0).detach().cpu()
 
     ############### Print ###############
+    print(f"Score (with training data): {torch.nn.functional.mse_loss(y_pred, y_true)}")
 
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
     fig.canvas.manager.set_window_title(f"{MODEL} model")
@@ -166,6 +199,10 @@ def main():
     plot_losses(f"Loss {MODEL}", losses)
 
     plt.show()
+
+    # Vanilla:  218600.11780547712
+    # Autodiff: 111091.1595858021
+    # PINN:     76983.53417037967
 
 
 if __name__ == "__main__":
