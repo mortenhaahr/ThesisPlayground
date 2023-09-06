@@ -7,27 +7,9 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 DEVICE = "cpu"
-MODEL = "autodiff"
-
-
-class WeightedLoss(torch.nn.Module):
-    """A loss function that calculates the losses with certain weights attached"""
-
-    def __init__(self, eps=1e-11):
-        super().__init__()
-        self.eps = eps
-
-    def forward(self, yhat, y):
-        w0 = 1
-        w1 = 1
-
-        criterion = torch.nn.MSELoss()
-        loss0 = criterion(yhat[0], y[0]) * w0
-        loss1 = criterion(yhat[1], y[1]) * w1
-        # print(loss0)
-        # print(loss1)
-        # loss = loss * weights
-        return loss0 + loss1 + self.eps
+MODEL = "pinn"
+TAU = 100
+TRANSFORMATION = TAU != 1  # Use transformation if TAU != 1
 
 
 # plot loss functions as function of training steps
@@ -83,7 +65,8 @@ def main():
     step_size = 10.0  # [s]
     t_start = 0
     t_end = 2000
-    t_eval = np.arange(t_start, t_end, step_size)
+    t_eval = np.arange(t_start / TAU, t_end / TAU, step_size / TAU)
+    t_eval_non_transformed = np.arange(t_start, t_end, step_size)
     subsample_every = 10
     N_epochs = 2000
 
@@ -91,7 +74,17 @@ def main():
     pos = lambda t: y0[0] + t * y0[1] + 1 / 2 * y0[2] * t**2
     vel = lambda t: y0[1] + y0[2] * t
 
-    y_true = torch.tensor(np.array([[pos(t) for t in t_eval], [vel(t) for t in t_eval]]))
+    y_true = torch.tensor(
+        np.array([[pos(t) for t in t_eval], [vel(t) for t in t_eval]])
+    )
+    y_true_non_transformed = torch.tensor(
+        np.array(
+            [
+                [pos(t) for t in t_eval_non_transformed],
+                [vel(t) for t in t_eval_non_transformed],
+            ]
+        )
+    )
 
     t = torch.tensor(t_eval, device="cpu", requires_grad=True)
     y_train = torch.tensor(y_true[:, ::subsample_every]).to(DEVICE)
@@ -102,10 +95,7 @@ def main():
     optim = torch.optim.Adam(nn.parameters())
     losses = []
 
-    if MODEL == "pinn":
-        loss_func = torch.nn.functional.mse_loss
-    else:
-        loss_func = WeightedLoss()
+    loss_func = torch.nn.functional.mse_loss
 
     for epoch in tqdm(range(N_epochs), desc=f"{MODEL}: training epoch"):
         out = None
@@ -141,14 +131,22 @@ def main():
                 create_graph=True,
             )[0].unsqueeze(0)
 
-            # Enforce relation that position can be calculated through
-            # x_0 + v_0*t + 1/2 a * t^2 but also x_0 + 1/2(v_0 + v)*t
-            theta_eq = (
-                theta_pred[0] + 1 / 2 * (omega_pred[0] + omega_pred) * t_train_dense
-            )
-            loss_equation = loss_func(theta_pred, theta_eq)
+            omega_tmp = listify(omega_pred)
+            a_pred = torch.autograd.grad(
+                omega_tmp,
+                t_train_dense,
+                only_inputs=True,
+                retain_graph=True,
+                create_graph=True,
+            )[0].unsqueeze(0)
 
-            # collocation loss only used training data
+            # Enforce relation that velocity can be calculated through
+            # v = v0 + a*t
+            # (There are many different options here but this gives best results)
+            omega_eq = omega_pred[0][0] + a_pred * t
+            loss_equation = loss_func(omega_pred, omega_eq)
+
+            # collocation loss only uses training data
             theta_omega_dense = torch.cat((theta_pred, omega_pred), dim=0)
             out = theta_omega_dense[:, ::subsample_every]
 
@@ -179,17 +177,36 @@ def main():
         v_pred = torch.autograd.grad(x_tmp, t, only_inputs=True)[0].unsqueeze(0)
         y_pred = torch.cat((x_pred, v_pred), dim=0).detach().cpu()
 
+    ############### Inverse transform ###############
+    if TRANSFORMATION:
+        # We the parameters to make the inverse transformation
+        x0 = y_pred[0][0]
+        v0 = y_pred[1][0]
+        a = torch.mean((y_pred[1][1:] - v0) / (t[1:]))
+        v = v0 + a * (t * TAU)
+        x = x0 + 1 / 2 * (v0 + v) * (t * TAU)
+        y_pred = torch.cat((x.view(1, -1), v.view(1, -1)), dim=0).detach().cpu()
+
     ############### Print ###############
-    print(f"Score (with training data): {torch.nn.functional.mse_loss(y_pred, y_true)}")
+    # (For real tests the training data should be excluded)
+    print(
+        f"Score (with training data): {torch.nn.functional.mse_loss(y_pred, y_true_non_transformed)}"
+    )
 
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
-    fig.canvas.manager.set_window_title(f"{MODEL} model")
-    plot_prediction(t_eval, y_pred[0], y_true[0], "x(t)", ax1, "b")
-    plot_prediction(t_eval, y_pred[1], y_true[1], "v(t)", ax2, "r")
+    fig.canvas.manager.set_window_title(f"{MODEL} model{' - with tau' if TRANSFORMATION else ''}")
+    plot_prediction(
+        t_eval_non_transformed, y_pred[0], y_true_non_transformed[0], "x(t)", ax1, "b"
+    )
+    plot_prediction(
+        t_eval_non_transformed, y_pred[1], y_true_non_transformed[1], "v(t)", ax2, "r"
+    )
 
     t_samples = t_train.detach().cpu()
-    x_samples = y_true[:, ::subsample_every][0]
-    v_samples = y_true[:, ::subsample_every][1]
+    if TRANSFORMATION:
+        t_samples = t_samples * TAU
+    x_samples = y_true_non_transformed[:, ::subsample_every][0]
+    v_samples = y_true_non_transformed[:, ::subsample_every][1]
     plot_sample_points(t_samples, x_samples, ax1)
     plot_sample_points(t_samples, v_samples, ax2)
 
@@ -199,10 +216,6 @@ def main():
     plot_losses(f"Loss {MODEL}", losses)
 
     plt.show()
-
-    # Vanilla:  218600.11780547712
-    # Autodiff: 111091.1595858021
-    # PINN:     76983.53417037967
 
 
 if __name__ == "__main__":
