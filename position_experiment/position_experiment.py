@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 DEVICE = "cpu"
-MODEL = "pinn"
+MODEL = "vanilla"
 TAU = 100
 TRANSFORMATION = TAU != 1  # Use transformation if TAU != 1
 
@@ -59,8 +59,21 @@ def make_nn(input_dim, output_dim):
 def listify(A):
     return [a for a in A.flatten()]
 
-
 def main():
+    """
+    NOTE:
+    This works in the simulation but it may or may not be that useable for real-world examples.
+    When we calculate `y_true` we essentially cheat a little by calculating with the new time scale directly.
+    If the data was sampled through the real world, this transformation would not be possible to make, as
+    we would then have to calculate "x0", "v0" and "a" through our input data.
+    In order to calculate this, we would strictly impose that the data adheres to the physics equations.
+    I.e., we enforce a strict relationship between the equations and our data - even though that may not be 100 % true
+    in a real-world scenario.
+    Furthermore, if this strict relationship was true then it would not make any sense to create a data-driven model in the
+    first place, since we can use a first-principle model.
+    I.e., a program that takes a "t" and returns x0*t + v0*t + 1/2*a*t².
+    """
+
     y0 = [0, 0, 0.01]  # Start at 0, driving with 0 m/s, accelerating with 1 mm/s²
     step_size = 10.0  # [s]
     t_start = 0
@@ -75,9 +88,6 @@ def main():
     vel = lambda t: y0[1] + y0[2] * t
 
     y_true = torch.tensor(
-        np.array([[pos(t) for t in t_eval], [vel(t) for t in t_eval]])
-    )
-    y_true_non_transformed = torch.tensor(
         np.array(
             [
                 [pos(t) for t in t_eval_non_transformed],
@@ -85,9 +95,12 @@ def main():
             ]
         )
     )
+    y_transf = torch.tensor(
+        np.array([[pos(t) for t in t_eval], [vel(t) for t in t_eval]])
+    )
 
     t = torch.tensor(t_eval, device="cpu", requires_grad=True)
-    y_train = torch.tensor(y_true[:, ::subsample_every]).to(DEVICE)
+    y_train = torch.tensor(y_transf[:, ::subsample_every]).to(DEVICE)
     t_train = torch.tensor(t_eval[::subsample_every], requires_grad=True).to(DEVICE)
 
     output_dim = 2 if MODEL == "vanilla" else 1
@@ -190,23 +203,25 @@ def main():
     ############### Print ###############
     # (For real tests the training data should be excluded)
     print(
-        f"Score (with training data): {torch.nn.functional.mse_loss(y_pred, y_true_non_transformed)}"
+        f"Score (with training data): {torch.nn.functional.mse_loss(y_pred, y_true)}"
     )
 
     fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True)
-    fig.canvas.manager.set_window_title(f"{MODEL} model{' - with tau' if TRANSFORMATION else ''}")
-    plot_prediction(
-        t_eval_non_transformed, y_pred[0], y_true_non_transformed[0], "x(t)", ax1, "b"
+    fig.canvas.manager.set_window_title(
+        f"{MODEL} model{' - with tau' if TRANSFORMATION else ''}"
     )
     plot_prediction(
-        t_eval_non_transformed, y_pred[1], y_true_non_transformed[1], "v(t)", ax2, "r"
+        t_eval_non_transformed, y_pred[0], y_true[0], "x(t)", ax1, "b"
+    )
+    plot_prediction(
+        t_eval_non_transformed, y_pred[1], y_true[1], "v(t)", ax2, "r"
     )
 
     t_samples = t_train.detach().cpu()
     if TRANSFORMATION:
         t_samples = t_samples * TAU
-    x_samples = y_true_non_transformed[:, ::subsample_every][0]
-    v_samples = y_true_non_transformed[:, ::subsample_every][1]
+    x_samples = y_true[:, ::subsample_every][0]
+    v_samples = y_true[:, ::subsample_every][1]
     plot_sample_points(t_samples, x_samples, ax1)
     plot_sample_points(t_samples, v_samples, ax2)
 
