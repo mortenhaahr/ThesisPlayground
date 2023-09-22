@@ -7,7 +7,7 @@ from argparse import ArgumentParser, BooleanOptionalAction
 import sys
 import re
 import numpy as np
-from enum import StrEnum, auto
+from enum import Enum, auto
 import operator
 
 
@@ -73,7 +73,7 @@ def _detect_interval_indices_old(
 
 
 def detect_interval_indices(data, DELTA_THRESHOLD = 0.5, MEAN_WINDOW=10):
-    class FSMState(StrEnum):
+    class FSMState(Enum):
         LookingForChange = auto()
         LookingForSteady = auto()
 
