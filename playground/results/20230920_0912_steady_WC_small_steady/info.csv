@@ -1,0 +1,29 @@
+<class 'pandas.core.frame.DataFrame'>
+RangeIndex: 980 entries, 0 to 979
+Data columns (total 22 columns):
+ #   Column                Non-Null Count  Dtype  
+---  ------                --------------  -----  
+ 0   FT0101[l/m]           980 non-null    float64
+ 1   FT0401[m3/h]          980 non-null    float64
+ 2   PT0101[Bar]           980 non-null    float64
+ 3   PT0102[Bar]           980 non-null    float64
+ 4   PT0201[Bar]           980 non-null    float64
+ 5   PT0202[Bar]           980 non-null    float64
+ 6   CV0201[%]             980 non-null    float64
+ 7   PT0203[Bar]           980 non-null    float64
+ 8   p                     980 non-null    float64
+ 9   t_w[K]                980 non-null    float64
+ 10  speed[RPM]            980 non-null    float64
+ 11  outlet_pressure[Bar]  980 non-null    float64
+ 12  p_lo_min[W]           980 non-null    float64
+ 13  p_lo_max[W]           980 non-null    float64
+ 14  time_in_stop          980 non-null    float64
+ 15  last_time_in_stop     980 non-null    float64
+ 16  speed_avedev          980 non-null    float64
+ 17  pump_output_control_  980 non-null    float64
+ 18  PT0106                980 non-null    float64
+ 19  FT0105                980 non-null    float64
+ 20  PV0106                980 non-null    float64
+ 21  SC0401                980 non-null    float64
+dtypes: float64(22)
+memory usage: 168.6 KB

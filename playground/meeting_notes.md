@@ -1,0 +1,17 @@
+- Weird pump pressure on 20230918_1207_steady_LF_KC_15_stdy:
+    - Low flow stop check
+        - He says it looks like we have too little pressure inside the pressure tank
+    - Self learning mode - read about it
+- Don't trust pressure reading below 0,1 bars
+- Temperature not useful:
+    - The behaviour will be different from the real world but it might still be useful.
+        - Get clarification on which scenarios the water temperature increases.
+    - Also expect different results if we run the test all afternoon because the motor is heated up
+- Moving test setup to AU:
+    - If we are the only ones working with setup it is okay. But Jesper may also need it.
+    - Maybe ok if Jesper is ok with it.
+- More automated tests:
+    - Done by adding actuators
+    - Controllable valves:
+        - Done with pneumatic actuator
+    - Jorge will discuss with Mads
