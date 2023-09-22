@@ -1,8 +1,3 @@
-### TMP:
-- Missing tests:
-    - Make tests determining how long the toilets should be pressed until we start seeing different behaviour
-    - A lot with leakages
-
 ### Ways of control
 - Shower: Mechanical valve
 - Washing machine: Binary valve
@@ -30,6 +25,7 @@
 ### Other
 - Unless otherwise indicated: LOWFLOW_MODE is on.
 - Toilet: A small flush will empty the cisterne for around 37 seconds (?). A big flush will empty is for around 60 seconds.
+- After meeting with Jorge on 21.09, it might seem as if the testdata generated from before this date was generated with tool little pressure in the tank.
 
 ### Errors
 - The bathroom (CV0202) leakage flow does not change despite changing the setting in PLC
