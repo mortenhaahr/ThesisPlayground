@@ -1,0 +1,100 @@
+<mxfile host="Electron" modified="2023-09-14T12:55:09.792Z" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/21.1.2 Chrome/106.0.5249.199 Electron/21.4.3 Safari/537.36" etag="4B1aQ6KduWslaB85OgRN" version="21.1.2" type="device">
+  <diagram name="Page-1" id="JHQOHHBSyNYpwfMhkGA9">
+    <mxGraphModel dx="1432" dy="884" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-1" value="Physical Environment" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="50" y="30" width="220" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-7" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;" edge="1" parent="1" source="bf1XzzbdoYewhRQbb_Qk-5" target="bf1XzzbdoYewhRQbb_Qk-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-5" value="Physical Twin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="100" y="140" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;startArrow=classic;startFill=1;" edge="1" parent="1" source="bf1XzzbdoYewhRQbb_Qk-6" target="bf1XzzbdoYewhRQbb_Qk-5">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-6" value="Digital Twin" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="100" y="250" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-11" value="Adds value by enhancing performance or adding services" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="255" y="155" width="340" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-12" value="Based off of:&amp;nbsp;https://odin.cps.digit.au.dk/into-cps/dtaas/assets/DTaaS-short-intro.pdf" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="255" y="230" width="470" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-14" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="90" y="540" width="550" height="330" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-15" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="110" y="580" width="510" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-16" value="Physical Twin" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="315" y="550" width="100" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-17" value="Cyber-Physical System (CPS)" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="270" y="590" width="190" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-19" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="130" y="630" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-20" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="400" y="630" width="200" height="200" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-21" value="Cyber Part" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="190" y="640" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-22" value="Physical Part" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="455" y="640" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-23" value="Computation&lt;br&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Communication&lt;br&gt;Control&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Business logic&lt;/span&gt;&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="145" y="665" width="110" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-26" value="&lt;div style=&quot;text-align: left;&quot;&gt;&lt;br&gt;&lt;/div&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="630" y="435" width="20" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-29" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;Car example:&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;Wheels&lt;/div&gt;&lt;div style=&quot;&quot;&gt;Motor&lt;/div&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="410" y="730" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-30" value="Car example:&lt;br&gt;Control system&lt;br&gt;Logging system" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="145" y="730" width="110" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-31" value="Components from physical world&lt;br&gt;Mechanical systems&lt;br&gt;&quot;Black-boxes&quot;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="410" y="665" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-32" value="Sensors" style="endArrow=classic;html=1;rounded=0;entryX=1;entryY=0.25;entryDx=0;entryDy=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="bf1XzzbdoYewhRQbb_Qk-20" target="bf1XzzbdoYewhRQbb_Qk-19">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="810" as="sourcePoint" />
+            <mxPoint x="450" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-34" value="Actuators" style="endArrow=classic;html=1;rounded=0;exitX=1;exitY=0.75;exitDx=0;exitDy=0;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" edge="1" parent="1" source="bf1XzzbdoYewhRQbb_Qk-19" target="bf1XzzbdoYewhRQbb_Qk-20">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="400" y="810" as="sourcePoint" />
+            <mxPoint x="450" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-35" value="Car example and definitions:&amp;nbsp;https://arxiv.org/pdf/2102.10390.pdf" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="90" y="460" width="370" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-36" value="" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="90" y="920" width="570" height="330" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-37" value="Physical environment" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="295" y="930" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-38" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="120" y="960" width="510" height="270" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-39" value="Environment surrounding the physical part of the CPS" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="140" y="980" width="310" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="bf1XzzbdoYewhRQbb_Qk-40" value="Car example:&lt;br&gt;Wind&lt;br&gt;Road surface" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="255" y="1065" width="100" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
