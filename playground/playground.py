@@ -162,8 +162,6 @@ if __name__ == "__main__":
     Path(f"{RESULTS_FOLDER}").mkdir(parents=True, exist_ok=True)
 
     for d in data:
-        if d != "FT0101[l/m]":
-            continue
         unit_start = d.find("[")
         if unit_start != -1:
             unit_end = d.find("]")
