@@ -26,6 +26,11 @@
 - Unless otherwise indicated: LOWFLOW_MODE is on.
 - Toilet: A small flush will empty the cisterne for around 37 seconds (?). A big flush will empty is for around 60 seconds.
 - After meeting with Jorge on 21.09, it might seem as if the testdata generated from before this date was generated with tool little pressure in the tank.
+- When we came out on the 25.10 to perform more tests, the pump was behaving very oddly. Initially, it didn't work at all so we power cycled.
+    - Sometimes it would perform work when no appliance was turned on.
+    - Other times it would not perform work when we turned on an appliance
+    - Finally, it would sometimes work as expected.
+    - We made some tests with this malfunctioning pump. They have been prepended "ano".
 
 ### Errors
 - The bathroom (CV0202) leakage flow does not change despite changing the setting in PLC
@@ -182,3 +187,69 @@
 - Filling cisterne until around 123 seconds
     - This started happening while holding big flush
 - No flow for around 30 seconds
+
+
+### _ano_KC1_full
+- Setpoint of pump is at 4 bars but pressure is not reached (see start of data)
+- No flow for 20 seconds
+- KC1 running full for 80 seconds - doesn't look like it
+    - Pump was not doing any work
+- No flow for 20 seconds
+- Following the test the pump would:
+    - About 2 minutes after the pump started increasing the pressure again
+    - Have the setpoint LED blinking at 2 bars
+    - Indicate unable to reach setpoint pressure (error LED 5 (p. 15 in manual))
+
+### _ano_toilet_big
+- Note that pump had been reset around 2 minutes prior to the test but it was not really doing anything.
+- No flow for 20 seconds
+- Big toilet flush. Filling for 75 seconds.
+- Pump trying to reach setpoint until around 4min20sec.
+- Pump stops doing work. Pressure indicator blinking at 2,5 bars
+
+### _ano_shower_full
+- Setpoint changed to 3.5 bars but eventually pump reaches 4 bars...
+- No flow for 20 seconds - setpoint not reached
+- Shower running full:
+    - Until 97 seconds there was very low flow and pump not performing a lot of work
+    - The pump then decided to work. Shower running full at intended setpoint pressure until 151 seconds where I turned off.
+    - No flow until 201 seconds. Pump doing work for quite a while after. 
+
+### _ano_garden_full
+- Setpoint set back to 4.0 bars. Everything actually seems to be working as intended.
+- No flow for 20 seconds
+- Garden full for 60 seconds.
+- No flow for 60 seconds. Pump eventually turns off. Everything seems good.
+
+
+### _ano_sanity_garden_full
+- Setpoint still on 4.0 bars
+- Turned on garden hose to provide flow of around 10 l/min for 15min20s. (Went away during most of the test)
+- No flow for 2min.
+- When done with the test pressure indicator blinking at 3,5 bars
+- Conclusion: It looks better than some of the earlier tests but still not desired behaviour
+
+### _ano_trans_toilet_toilet_big
+- Note: Test pressure indicator blinking at 3,5 bars
+- BV0103 valve turned at 30 seconds
+- Toilet big flush at 60 seconds
+- BV0103 turned again at 90 seconds
+- Pump done filling cisterne at around 2min20
+    - Behaving as expected
+- Measurement stopped at 2min50
+
+### _ano_trans_KC1_full
+- Note: Test pressure indicator blinking at 3,5 bars
+- BV0103 valve turned at 30 seconds
+- KC1 turned to full at 60 seconds
+- BV0103 valve turned again at 90 seconds
+- KC1 turned off at 150 seconds
+- No flow until 210 seconds
+    - Pump was doing work until 3min10.
+
+### _ano_KC1_LF_mode
+- No flow 30 seconds
+- 16 seconds to adjust sink
+- Until around 10min it is behaving normally but not going into LF mode
+- After 10min It takes a big dip in pressure and then slowly increases pressure.
+- After 16min the pressure plummets again only to increase slowly first then steadily.
