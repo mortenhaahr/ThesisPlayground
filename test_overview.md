@@ -39,6 +39,7 @@
     - TODO: Fixed on tests from: TBD
 - The garden hose (PT0203) sensor data is incorrect in due to error in PLC code
     - TODO: Fixed on tests from: TBD
+- The program says we are sampling at a rate of 10Hz but the log files are sampled at 8.33 Hz
 
 
 ### 20230918_1129_steady_half_show_steady:
