@@ -189,7 +189,7 @@
 - No flow for around 30 seconds
 
 
-### _ano_KC1_full
+### 20231025_0750_ano_KC1_full
 - Setpoint of pump is at 4 bars but pressure is not reached (see start of data)
 - No flow for 20 seconds
 - KC1 running full for 80 seconds - doesn't look like it
@@ -200,14 +200,14 @@
     - Have the setpoint LED blinking at 2 bars
     - Indicate unable to reach setpoint pressure (error LED 5 (p. 15 in manual))
 
-### _ano_toilet_big
+### 20231025_0805_ano_toilet_big
 - Note that pump had been reset around 2 minutes prior to the test but it was not really doing anything.
 - No flow for 20 seconds
 - Big toilet flush. Filling for 75 seconds.
 - Pump trying to reach setpoint until around 4min20sec.
 - Pump stops doing work. Pressure indicator blinking at 2,5 bars
 
-### _ano_shower_full
+### 20231025_0815_ano_shower_full
 - Setpoint changed to 3.5 bars but eventually pump reaches 4 bars...
 - No flow for 20 seconds - setpoint not reached
 - Shower running full:
@@ -215,21 +215,22 @@
     - The pump then decided to work. Shower running full at intended setpoint pressure until 151 seconds where I turned off.
     - No flow until 201 seconds. Pump doing work for quite a while after. 
 
-### _ano_garden_full
+### 20231025_0826_ano_garden_full
 - Setpoint set back to 4.0 bars. Everything actually seems to be working as intended.
 - No flow for 20 seconds
 - Garden full for 60 seconds.
 - No flow for 60 seconds. Pump eventually turns off. Everything seems good.
 
 
-### _ano_sanity_garden_full
+### 20231025_0836_ano_sanity_garden_full
 - Setpoint still on 4.0 bars
-- Turned on garden hose to provide flow of around 10 l/min for 15min20s. (Went away during most of the test)
+- Turned on garden hose to provide flow of around 10 l/min for 15min20s.
+  - (I went away during most of the test)
 - No flow for 2min.
 - When done with the test pressure indicator blinking at 3,5 bars
 - Conclusion: It looks better than some of the earlier tests but still not desired behaviour
 
-### _ano_trans_toilet_toilet_big
+### 20231025_0916_ano_trans_toilet_big
 - Note: Test pressure indicator blinking at 3,5 bars
 - BV0103 valve turned at 30 seconds
 - Toilet big flush at 60 seconds
@@ -238,7 +239,7 @@
     - Behaving as expected
 - Measurement stopped at 2min50
 
-### _ano_trans_KC1_full
+### 20231025_0934_ano_trans_KC1_full
 - Note: Test pressure indicator blinking at 3,5 bars
 - BV0103 valve turned at 30 seconds
 - KC1 turned to full at 60 seconds
@@ -247,7 +248,7 @@
 - No flow until 210 seconds
     - Pump was doing work until 3min10.
 
-### _ano_KC1_LF_mode
+### 20231025_1216_ano_KC1_LF_mode
 - No flow 30 seconds
 - 16 seconds to adjust sink
 - Until around 10min it is behaving normally but not going into LF mode
