@@ -1,5 +1,6 @@
 .vscode
 playground/results
+!playground/results/data_stats
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

@@ -12,6 +12,24 @@
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": ["--show", "-f ../testdata/20230918_1129_steady_half_show_steady.csv"]
+        },
+        {
+            "name": "Python Debug",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["-f ../testdata/20230918_1129_steady_half_show_steady.csv"]
+        },
+        {
+            "name": "New interval",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": ["--new_interval", "-f ../testdata/20230918_1129_steady_half_show_steady.csv"]
         }
     ]
 }

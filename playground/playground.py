@@ -19,7 +19,7 @@ def is_valid_file(parser, arg):
 
 
 IGNORED_FEATURES = (
-    r"act_mode\d|DBB_ANTI\.*|M2\.*|M3\.*|equal_period_count\.*|PT03\.*|FT010[3|4|6]\.*"
+    r"act_mode\d|DBB_ANTI\.*|M2\.*|M3\.*|equal_period_count\.*|PT03\.*|FT010[3|4|6]\.*|FT04\.*|speed\.*|\.*time\.*|p_\.*|pump_output_control\.*|last_time_in_stop\.*|SC04\.*|CV0\.*|PV\.*"
 )
 
 
@@ -69,7 +69,6 @@ def _detect_interval_indices_old(
         raise RuntimeError("Intervals appear to be of different lengths")
 
     return zip(transition_start, transition_end)
-
 
 
 def detect_interval_indices(data, DELTA_THRESHOLD = 0.5, MEAN_WINDOW=10):
@@ -176,14 +175,18 @@ if __name__ == "__main__":
         ax.set_xlabel("Time [s]")
         ax.set_ylabel(unit)
         ax.grid()
-        if d == "FT0101[l/m]":
-            intervals = tuple(detect_interval_indices(data[d]))
-            print(intervals)
-            colors = iter(plt.cm.rainbow(np.linspace(0, 1, len(intervals))))
-            for interval,_ in intervals:
-                c = next(colors)
-                ax.axvline(x=time_d[interval[0]], color=c)
-                ax.axvline(x=time_d[interval[1]], color=c)
+        
+        """
+        intervals = tuple(detect_interval_indices(data[d]))
+        #print(intervals)
+            
+        colors = iter(plt.cm.rainbow(np.linspace(0, 1, len(intervals))))
+        for interval,state in intervals:
+            c = next(colors)
+            ax.axvline(x=time_d[interval[0]], color=c)
+            ax.axvline(x=time_d[interval[1]], color=c)
+        """
+    
         plt.savefig(f"{RESULTS_FOLDER}/{title}.png", dpi=400)
         if args.show:
             plt.show()
