@@ -255,3 +255,44 @@
 - Until around 10min it is behaving normally but not going into LF mode
 - After 10min It takes a big dip in pressure and then slowly increases pressure.
 - After 16min the pressure plummets again only to increase slowly first then steadily.
+
+### XXXX_stable_appliance
+- No flow for xx seconds
+- At xx seconds turn the appliance to full
+- xx seconds steady flow
+- At xx seconds shut off appliance
+- xx in steady 0 flow (pump wierdness)
+
+### XXXX_stable_shower_xL
+- No flow for xx seconds
+- xx seconds to adjust shower to about xL
+- xx seconds steady flow at about xL
+- At xx seconds shut off shower
+- xx in steady 0 flow (pump wierdness)
+
+### xxxx_stable_wsm_gd_hose_full
+- No flow for xx seconds
+- At xx open the washing mashine
+  - The first 2 mins are basically crap due to pump error...
+- After pump stabilised xx seconds of steady washing mashine
+- Open Garden hose full
+- Steady with both for xx seconds
+- Close washing mashine
+- Pump error for xx seconds
+- Stable garden hose full for xx seconds
+- Close garden hose
+- Steady 0 flow for xx seconds
+
+### xxxx_stable_br_shower_gd_hose_full
+- No flow for xx seconds
+- Open shower at full capacity
+- Pump settling due to error for xx seconds
+- Steady shower only flow for xx seconds
+- Open garden hose at full capacity (xx seconds)
+- Pump settling due to error for xx seconds
+- Steady both for xx seconds
+- Close shower 
+- Pump settling due to error for xx seconds
+- Steady garden hose ony for xx seconds
+- Close garden hose
+- Steady 0 flow for xx seconds
