@@ -1,0 +1,71 @@
+{
+    "flow": [
+        NaN,
+        "m3/s"
+    ],
+    "pressure": [
+        NaN,
+        "Pa"
+    ],
+    "room_pressure": {
+        "kitchen": [
+            NaN,
+            "Pa"
+        ],
+        "bathroom": [
+            NaN,
+            "Pa"
+        ],
+        "garden": [
+            NaN,
+            "Pa"
+        ]
+    },
+    "hOhm": "kg/(m^4 * s)",
+    "R_total": [
+        NaN,
+        "hOhm"
+    ],
+    "pipe_pressure": {
+        "kitchen": [
+            NaN,
+            "Pa"
+        ],
+        "bathroom": [
+            NaN,
+            "Pa"
+        ],
+        "garden": [
+            NaN,
+            "Pa"
+        ]
+    },
+    "R_pipe": {
+        "kitchen": [
+            NaN,
+            "hOhm"
+        ],
+        "bathroom": [
+            NaN,
+            "hOhm"
+        ],
+        "garden": [
+            NaN,
+            "hOhm"
+        ]
+    },
+    "R_appliance": {
+        "kitchen": [
+            NaN,
+            "hOhm"
+        ],
+        "bathroom": [
+            NaN,
+            "hOhm"
+        ],
+        "garden": [
+            NaN,
+            "hOhm"
+        ]
+    }
+}
