@@ -354,23 +354,25 @@
 - Steady 0 flow untill end of sample
 
 ### 20231101_1155_stable_shower_3L
-An error in logging here. This sample contains both stable_shower_3L and 4L.
-This needs to be separeated later.
 - No flow for 4 seconds
 - Shower is tuned to about 3L of flow
     - untill 30 seconds
 - Steady flow at about 3L untill 116 seconds
 - Shower is turned off 
     - Takes about 4 seconds
-- No flow untill 186 seconds
+- No flow for rest of sample
     - The pump is behaving wierdly and takes a while to rebuild the pressure
-- Start of sample with 4L of flow
+
+### 20231101_1159_stable_shower_4L
+This sample was cought in a logging error, so the sample starts a bit different from other samples.
 - The shower is tuned to about 4L of flow
-    - Takes untill 225 seconds
-- Steady flow at about 4L untill 315 seconds
+    - Takes untill 21 seconds
+- Steady flow at about 4L untill 110 seconds
 - Shower is turned off
     - takes 6 seconds
 - Steady 0 flow for rest of sample
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+
 
 ### 20231101_1202_stable_shower_5L
 - No flow for 8 seconds
@@ -396,25 +398,24 @@ This needs to be separeated later.
     - The pump is behaving wierdly and takes a while to rebuild the pressure
 
 ### 20231101_1211_stable_shower_7L
-This is a concatination of 2 samples due to logging error.
-This sample contains both a measurement of flow at 7L and max flow for shower.
-The samples should be separated later.
 - No flow for 6 seconds
 - The shower is opened and tuned to about 7L of flow
     - Done at 29 seconds
 - Steady flow at about 7L of flow untill 117 seconds
 - Shower is turned off 
     - Done at 123 seconds
-- No flow untill 184 seconds
+- No flow for rest of sample
     - The pump is behaving wierdly and takes a while to rebuild the pressure
-    - This is the split point between the two samples
+
+### 20231101_1215_stable_shower_full
+This sample was subject to a logging error and therefore starts a bit differently from most other samples.
 - Shower is turned all the way up 
-    - Steady at 225 seconds
-- Steady flow untill 317 seconds
+    - Steady at 6 seconds
+- Steady flow untill 114 seconds
 - Shower is turned off
     - Takes 5 seconds
 - No flow for rest of sample
-
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
 ### 20231101_1218_stable_kc_sink
 - No flow for 9 seconds
 - The sink in the kitchen is opened all the way
@@ -472,31 +473,32 @@ The samples should be separated later.
     - The pump is behaving wierdly and takes a while to rebuild the pressure
 
 ### 20231101_1246_stable_br_leak_full
-This is a concatination of three samples.
-The first and second sample is of a stable bathroom leak in fully opened state.
-The third sample is a repeat of the main leak in fully opened state.
 - No flow for 22 seconds
 - The bathroom leak is opened to 100%
     - Takes 5 seconds
 - Steady flow out of fully opened bathroom leak untill 131 seconds
 - The bathroom leak is fully closed
     - Takes 8 seconds
-- No flow untill 215 seconds
+- No flow for rest of sample
     - The pump is behaving wierdly and takes a while to rebuild the pressure
-- Start of second sample at 220 seconds
-- No flow untill 239 seconds
+
+### 20231101_1250_stable_br_leak_full
+This sample was subject to a logging error. No noticable difference in the data though.
+- No flow for 4 seconds
 - The bathroom leak is opened to 100%
-    - Takes 5 seconds
-- Steady flow out of fully opened bathroom leak untill 356 seconds
+    - Takes 9 seconds
+- Steady flow out of fully opened bathroom leak untill 120 seconds
 - The bathroom leak is fully closed
     - Takes 8 seconds
-- No flow untill 430 seconds
+- No flow for rest of sample
     - The pump is behaving wierdly and takes a while to rebuild the pressure
-- Start of third sample at 440 seconds
-- No flow untill 464 seconds
+
+### 20231101_1254_stable_main_leak_full
+This sample was subject to a logging error. No noticable difference in the data though.
+- No flow for 2 seconds
 - The main pipe leakage is opened to 100%
     - Takes 7 seconds
-- Steady flow out of main leakge untill 582 seconds
+- Steady flow out of main leakge untill 120 seconds
 - The main pipe leakage is fully closed
     - Takes 8 seconds
 - No flow for rest of sample
@@ -555,59 +557,60 @@ The third sample is a repeat of the main leak in fully opened state.
 - No flow for rest of sample
 
 ### 20231101_1328_stable_shower_2L
-This is a concatination of five samples.
-In each sample the shower is tuned to a specific flow rate and held there for some time to allow the system to stabilise.
-In the first sample the flow rate is about 2L.
-For the second sample the flow rate is about 3L.
-For the thrid sample the flow rate is about 4L.
-For the fourth sample the flow rate is about 5L.
-For the fifth sample the shower is opened all the way.
 - No flow for 14 seconds
 - The output of the shower is tuned to about 2L
-    - Takes 116 seconds
-- The flow of the shower is steady at about 2L untill 227 seconds
+    - Tuning done at 123 seconds
+- The flow of the shower is steady at about 2L untill 226 seconds
 - The shower is turned off  
-    - Takes 4 seconds
-- No flow untill 288 seconds
+    - Takes 6 seconds
+- No flow for rest of sample
     - The pump is behaving wierdly and takes a while to rebuild the pressure
-- Start of sample 2
-- No flow for 42 seconds
+
+### 20231101_1333_stable_shower_3L
+This sample was subject to a logging error. No noticable difference in the data though.
+- No flow for 3 seconds
 - The output of the shower is tuned to about 3L
-    - Tuning done at 355 seconds
-- The flow of the shower is steady at about 3L untill 436 seconds
+    - Tuning done at 25 seconds
+- The flow of the shower is steady at about 3L untill 115 seconds
 - The pump tests the flow rate and does not go back into the same mode 
-    - Lasts untill 552 seconds
+    - Lasts untill 223 seconds
 - The shower is turned off  
     - Takes 5 seconds
-- No flow untill 600 seconds
-- Start of sample 3
-- No flow for 32 seconds
+- No flow for rest of sample
+
+### 20231101_1338_stable_shower_4L
+This sample was subject to a logging error. No noticable difference in the data though.
+- No flow for 10 seconds
 - The output of the shower is tuned to about 4L
-    - Tuning done at 670 seconds
-- The flow of the shower is steady at about 4L untill 768 seconds
+    - Tuning done at 33 seconds
+- The flow of the shower is steady at about 4L untill 145 seconds
 - The shower is turned off  
-    - Takes 7 seconds
-- No flow untill 830 seconds
+    - Takes 8 seconds
+- No flow for rest of sample
     - The pump is behaving wierdly and takes a while to rebuild the pressure
-- Start of sample 4
-- No flow for 30 seconds
+
+### 20231101_1342_stable_shower_5L
+This sample was subject to a logging error. No noticable difference in the data though.
+- No flow for 5 seconds
 - The output of the shower is tuned to about 5L
-    - Tuning done at 884 seconds
-- The flow of the shower is steady at about 5L untill 967 seconds
+    - Tuning done at 25 seconds
+- The flow of the shower is steady at about 5L untill 113 seconds
 - The shower is turned off  
-    - Takes 3 seconds
-- No flow untill 1018 seconds
-- Start of sample 5
-- No flow for 29 seconds
+    - Takes 5 seconds
+- No flow for rest of sample
+
+### 20231101_1345_stable_shower_full
+This sample was subject to a logging error. No noticable difference in the data though.
+- No flow for 10 seconds
 - The output of the shower is turned all the way up
-    - Takes 7 seconds
+    - Takes 9 seconds
 - The flow of the shower is lower than expected (due to pressure) so the shower dial is turned up and down to investigate and ultimately closed.
-    - Done at 1073 seconds
-- No flow untill 1082 seconds
+    - Done at 37 seconds
+- No flow untill 45 seconds
 - The shower is opened all the way
     - Takes 8 seconds
-- Steady flow out of shower untill 1185 seconds
+- Steady flow out of shower untill 148 seconds
 - The shower is turned off  
-    - Takes 3 seconds
+    - Takes 5 seconds
 - No flow for rest of sample
 
