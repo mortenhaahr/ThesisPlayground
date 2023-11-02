@@ -256,43 +256,358 @@
 - After 10min It takes a big dip in pressure and then slowly increases pressure.
 - After 16min the pressure plummets again only to increase slowly first then steadily.
 
-### XXXX_stable_appliance
-- No flow for xx seconds
-- At xx seconds turn the appliance to full
-- xx seconds steady flow
-- At xx seconds shut off appliance
-- xx in steady 0 flow (pump wierdness)
+### 20231101_0919_stable_shower
+- No flow for 44 seconds
+- Turn the shower to full
+- Pump settling due to error 
+- At 117 seconds steady flow begins
+- At 228 seconds the pump determines flow
+- Flow determined and back to steady at 280 seconds
+- At 395 seconds pump determines flow
+- At 472 seconds the flow is steady again
+- At 535 seconds the shower is shut off
+- The sysem is in 0 flow state for the remainder of the sample
 
-### XXXX_stable_shower_xL
-- No flow for xx seconds
-- xx seconds to adjust shower to about xL
-- xx seconds steady flow at about xL
-- At xx seconds shut off shower
-- xx in steady 0 flow (pump wierdness)
+### 20231101_1108_stable_kc_sink
+- No flow for 2 seconds
+- Turn the kitchen sink to full
+- Steady flow for 126 seconds
+- Pump measures flow rate for the remainder of the sample
 
-### xxxx_stable_wsm_gd_hose_full
-- No flow for xx seconds
-- At xx open the washing mashine
-  - The first 2 mins are basically crap due to pump error...
-- After pump stabilised xx seconds of steady washing mashine
-- Open Garden hose full
-- Steady with both for xx seconds
-- Close washing mashine
-- Pump error for xx seconds
-- Stable garden hose full for xx seconds
+### 20231101_1111_stable_wsm
+- No flow for 26 seconds
+- The washing mashine in the kitchen is turned on
+- After stabilizing, the flow is steady untill 152 seconds
+- Pump error untill 263 seconds
+- The flow is steady untill 330 seconds
+- The washing mashine is turned off
+- The flow is steady at 0 for the remainder of the sample
+
+### 20231101_1117_stable_br_sink
+- No flow for 17 seconds
+- The sink in the bathroom is turned to max
+- The flow is steady but falling untill 144 seconds
+- The pump tries to determine flow untill 197 seconds
+- The flow is steady untill 317 seconds
+- The pump tries to determine flow untill 349 seconds
+- The bathroom sink is turned off
+- Steady 0 flow untill end of sample
+
+### 20231101_1124_stable_br_toilet_big
+- No flow for 25 seconds
+- A big flush is made in the toilet for 2 seconds
+- The cisterne is being filled untill 81 seconds
+- The rest of the sample is without action
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+
+### 20231101_1127_stable_br_show_full
+- No flow for 19 seconds
+- The shower is opened all the way 
+    - Takes about 3 seconds
+- Steady flow untill 113 seconds
+- The shower is turned off
+    - Takes about 3 seconds
+- No flow for the rest of the sample
+
+### 20231101_1130_stable_br_toilet_small
+- No flow for 30 seconds
+- A small flush is made in the toilet (2 seconds)
+- Cisterne is filled untill 66 seconds
+- The cisterne is filled
+- No flow for the rest of the sample
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+
+### 20231101_1133_stable_gd_hose_full
+- No flow for 26 seconds
+- The garden hose is opened all the way 
+    - Takes 7 seconds
+- Steady flow untill 147 seconds
+- The garden hose is shut off
+    - Takes 7 seconds
+- No flow for the rest of the sample
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+
+### 20231101_1137_stable_wsm_shower_full
+- No flow for 33 seconds
+- The washing mashine is opened 
+- Steady flow untill 90 seconds
+- The shower is opened all the way
+- Steady flow untill 159 seconds
+- Pump has an error untill 192 seconds
+- Steady flow of both appliances untill 255 seconds
+- The washing mashine is shut off
+- The pump is behaving wierdly untill 334 seconds
+- Steady flow of the shower untill 402 seconds
+- The shower is turned off
+- I don't know what i did at 514 secs...
+    - Probably a small shower flow to see what the pump was doing
+    - Check this later
+
+### 20231101_1149_stable_shower_2L
+- No flow for 13 seconds
+- The shower is tuned to about 2L of flow
+    - Done at 100 seconds
+- Steady flow of shower at about 2L untill 168 seconds
+- Pump does flow measurement untill 209 seconds
+- Steady flow of shower at about 2L untill 287 seconds
+- The shower is turned off
+- Steady 0 flow untill end of sample
+
+### 20231101_1155_stable_shower_3L
+An error in logging here. This sample contains both stable_shower_3L and 4L.
+This needs to be separeated later.
+- No flow for 4 seconds
+- Shower is tuned to about 3L of flow
+    - untill 30 seconds
+- Steady flow at about 3L untill 116 seconds
+- Shower is turned off 
+    - Takes about 4 seconds
+- No flow untill 186 seconds
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+- Start of sample with 4L of flow
+- The shower is tuned to about 4L of flow
+    - Takes untill 225 seconds
+- Steady flow at about 4L untill 315 seconds
+- Shower is turned off
+    - takes 6 seconds
+- Steady 0 flow for rest of sample
+
+### 20231101_1202_stable_shower_5L
+- No flow for 8 seconds
+- Shower is tuned to about 5L of flow
+    - Takes 24 seconds
+- Steady flow at about 5L untill 133 seconds
+- Shower is turned off
+    - Takes 5 seconds
+- No flow for rest of sample
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+
+### 20231101_1206_stable_shower_6L
+- No flow for 5 seconds
+- Shower is opened and tuned to about 6L of flow
+    - Done at 23 seconds
+- Steady flow at about 6L of flow untill 132 seconds
+- Pump does something wierd untill 174 seconds
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+- Steady flow at about 6L of flow untill 248 seconds
+- Shower is turned off 
+    - Takes 5 seconds
+- No flow for rest of sample
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+
+### 20231101_1211_stable_shower_7L
+This is a concatination of 2 samples due to logging error.
+This sample contains both a measurement of flow at 7L and max flow for shower.
+The samples should be separated later.
+- No flow for 6 seconds
+- The shower is opened and tuned to about 7L of flow
+    - Done at 29 seconds
+- Steady flow at about 7L of flow untill 117 seconds
+- Shower is turned off 
+    - Done at 123 seconds
+- No flow untill 184 seconds
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+    - This is the split point between the two samples
+- Shower is turned all the way up 
+    - Steady at 225 seconds
+- Steady flow untill 317 seconds
+- Shower is turned off
+    - Takes 5 seconds
+- No flow for rest of sample
+
+### 20231101_1218_stable_kc_sink
+- No flow for 9 seconds
+- The sink in the kitchen is opened all the way
+    - Stable at 20 seconds
+- Stable flow untill 100 seconds
+- Sink is closed
+    - Takes 4 seconds
+- No flow for rest of sample
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+
+### 20231101_1222_stable_wsm
+- No flow for 19 seconds
+- The washing mashine is started
+    - Fully open at 35 seconds
+- Steady flow untill 127 seconds
+- The washing mashine is turned off
+    - Takes 5 seconds
+- No flow for rest of sample
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+
+### 20231101_1224_stable_br_sink
+- No flow for 12 seconds
+- The bathroom sink is opened all the way
+    - Takes 3 seconds
+- The pump is in oscilation (low flow) mode untill 131 seconds
+- The sink is turned off
+    - Takes 5 seconds
+- No flow untill 174 seconds
+- The bathroom sink is opened all the way
+    - Takes 4 seconds
+- Steady flow with pump in normal operation untill 277 seconds
+- Bathroom sink is turned off
+    - Takes 6 seconds
+- No flow for rest of sample
+
+### 20231101_1239_stable_gd_hose_full
+- No flow for 10 seconds
+- The garden hose is opened fully
+    - Takes 7 seconds
+- Stable flow through fully open garden hose
+    - Steady untill 123 seconds
+- Garden hose is closed fully
+    - Takes 7 seconds
+- No flow for rest of sample
+
+
+### 20231101_1242_stable_main_leak_full
+- No flow for 28 seconds
+- Main leak is fully opened 
+    - Takes 7 seconds
+- Steady flow out of main leak untill 135 seconds
+- The main leak is fully closed
+    - Takes 7 seconds
+- No flow for rest of sample
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+
+### 20231101_1246_stable_br_leak_full
+This is a concatination of three samples.
+The first and second sample is of a stable bathroom leak in fully opened state.
+The third sample is a repeat of the main leak in fully opened state.
+- No flow for 22 seconds
+- The bathroom leak is opened to 100%
+    - Takes 5 seconds
+- Steady flow out of fully opened bathroom leak untill 131 seconds
+- The bathroom leak is fully closed
+    - Takes 8 seconds
+- No flow untill 215 seconds
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+- Start of second sample at 220 seconds
+- No flow untill 239 seconds
+- The bathroom leak is opened to 100%
+    - Takes 5 seconds
+- Steady flow out of fully opened bathroom leak untill 356 seconds
+- The bathroom leak is fully closed
+    - Takes 8 seconds
+- No flow untill 430 seconds
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+- Start of third sample at 440 seconds
+- No flow untill 464 seconds
+- The main pipe leakage is opened to 100%
+    - Takes 7 seconds
+- Steady flow out of main leakge untill 582 seconds
+- The main pipe leakage is fully closed
+    - Takes 8 seconds
+- No flow for rest of sample
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+
+### 20231101_1258_stable_wsm_gd_hose_full
+- No flow for 20 seconds
+- Open the washing mashine
+    - Takes 5 seconds
+- Steady flow untill 42 seconds
+- Pump error untill 134 seconds
+    - No idea why this happened.
+- After pump stabilised, steady washing mashine flow untill 230 seconds
+- Garden hose was opened fully
+    - Takes 5 seconds
+- Steady flow of both garden hose and washing mashine untill 345 seconds
+- The washing mashine is turned off
+    - Takes 6 seconds
+- The pump shuts itself off and is very slow to reestablish itself
+    - Takes untill 425 seconds
+- Stable garden hose full untill 526 seconds
 - Close garden hose
-- Steady 0 flow for xx seconds
+    - Takes 6 seconds
+- Steady 0 flow for rest of sample
+    - One power and pressure sample is a total outlier in this steady 0 flow. The pressure rose to over 20 bar and the power consumption was above 6000 Watts.
 
-### xxxx_stable_br_shower_gd_hose_full
-- No flow for xx seconds
+### 20231101_1308_stable_br_shw_gd_hose_full
+- No flow for 17 seconds
 - Open shower at full capacity
-- Pump settling due to error for xx seconds
-- Steady shower only flow for xx seconds
-- Open garden hose at full capacity (xx seconds)
-- Pump settling due to error for xx seconds
-- Steady both for xx seconds
+    - Takes 4 seconds
+- Steady shower flow untill 26 seconds
+- Pump settling due to error untill 79 seconds
+- Steady shower only flow untill 164 seconds
+- Open garden hose at full capacity
+    - Takes 8 seconds
+- Steady flow of both shower and garden hose untill 194 seconds
+- Pump settling due to error untill 267 seconds
+- Steady both untill 362 seconds
 - Close shower 
-- Pump settling due to error for xx seconds
-- Steady garden hose ony for xx seconds
+    - Takes 5 seconds
+- Pump settling due to error untill 386 seconds
+- Steady garden hose only untill 483 seconds
 - Close garden hose
-- Steady 0 flow for xx seconds
+    - Takes 7 seconds
+- No action for rest of sample
+    - One power and pressure sample is a total outlier in this steady 0 flow. The pressure rose to over 20 bar and the power consumption was above 6000 Watts.
+
+### 20231101_1319_stable_shower_1L
+- No flow for 34 seconds
+- Shower is tuned to about 1L
+    - Takes untill 182 seconds
+- Flow at about 1L untill 479 seconds
+    - The pump is in hysteresis mode where it charges the hyrdophore, stops and then recharges the hydrophor after some time.
+- The shower is turned off
+    - Takes 3 seconds
+- No flow for rest of sample
+
+### 20231101_1328_stable_shower_2L
+This is a concatination of five samples.
+In each sample the shower is tuned to a specific flow rate and held there for some time to allow the system to stabilise.
+In the first sample the flow rate is about 2L.
+For the second sample the flow rate is about 3L.
+For the thrid sample the flow rate is about 4L.
+For the fourth sample the flow rate is about 5L.
+For the fifth sample the shower is opened all the way.
+- No flow for 14 seconds
+- The output of the shower is tuned to about 2L
+    - Takes 116 seconds
+- The flow of the shower is steady at about 2L untill 227 seconds
+- The shower is turned off  
+    - Takes 4 seconds
+- No flow untill 288 seconds
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+- Start of sample 2
+- No flow for 42 seconds
+- The output of the shower is tuned to about 3L
+    - Tuning done at 355 seconds
+- The flow of the shower is steady at about 3L untill 436 seconds
+- The pump tests the flow rate and does not go back into the same mode 
+    - Lasts untill 552 seconds
+- The shower is turned off  
+    - Takes 5 seconds
+- No flow untill 600 seconds
+- Start of sample 3
+- No flow for 32 seconds
+- The output of the shower is tuned to about 4L
+    - Tuning done at 670 seconds
+- The flow of the shower is steady at about 4L untill 768 seconds
+- The shower is turned off  
+    - Takes 7 seconds
+- No flow untill 830 seconds
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+- Start of sample 4
+- No flow for 30 seconds
+- The output of the shower is tuned to about 5L
+    - Tuning done at 884 seconds
+- The flow of the shower is steady at about 5L untill 967 seconds
+- The shower is turned off  
+    - Takes 3 seconds
+- No flow untill 1018 seconds
+- Start of sample 5
+- No flow for 29 seconds
+- The output of the shower is turned all the way up
+    - Takes 7 seconds
+- The flow of the shower is lower than expected (due to pressure) so the shower dial is turned up and down to investigate and ultimately closed.
+    - Done at 1073 seconds
+- No flow untill 1082 seconds
+- The shower is opened all the way
+    - Takes 8 seconds
+- Steady flow out of shower untill 1185 seconds
+- The shower is turned off  
+    - Takes 3 seconds
+- No flow for rest of sample
+
