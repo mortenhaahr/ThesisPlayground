@@ -1,0 +1,34 @@
+{
+    "pressure": [
+        380000.0,
+        "Pa"
+    ],
+    "room_pressure": {
+        "kitchen": [
+            373000.0,
+            "Pa"
+        ],
+        "bathroom": [
+            371999.99999999994,
+            "Pa"
+        ],
+        "garden": [
+            0.0,
+            "Pa"
+        ]
+    },
+    "room_pressure_diff": {
+        "kitchen": [
+            7000.0,
+            "Pa"
+        ],
+        "bathroom": [
+            8000.000000000058,
+            "Pa"
+        ],
+        "garden": [
+            380000.0,
+            "Pa"
+        ]
+    }
+}

@@ -451,6 +451,37 @@ This sample was subject to a logging error and therefore starts a bit differentl
     - Takes 6 seconds
 - No flow for rest of sample
 
+### 20231101_1230_stable_br_show_full
+This sample was subject to a logging error. No noticable difference in the data though.
+- No flow for 13 seconds
+- Shower opened to full 
+    - Takes 6 seconds
+- Steady flow untill 51 seconds
+- Shower is shut off
+    - Takes 6 seconds
+- No flow for rest of sample 
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+
+### 20231101_1234_stable_toilet_big
+This sample was subject to a logging error. No noticable difference in the data though.
+- No flow for 6 seconds
+- Toilet flushed big for 2 seconds
+    - Takes 6 seconds to become stable
+- Steady flow untill 65 seconds
+    - Takes 7 seconds for flow to stop
+- No flow for rest of sample 
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
+
+### 20231101_1237_stable_toilet_small
+This sample was subject to a logging error. No noticable difference in the data though.
+- No flow for 13 seconds
+- Shower opened to full 
+    - Takes 6 seconds
+- Steady flow untill 51 seconds
+- Shower is shut off
+    - Takes 6 seconds
+- No flow for rest of sample 
+    - The pump is behaving wierdly and takes a while to rebuild the pressure
 ### 20231101_1239_stable_gd_hose_full
 - No flow for 10 seconds
 - The garden hose is opened fully

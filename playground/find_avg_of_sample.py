@@ -10,11 +10,13 @@ import numpy as np
 from enum import Enum, auto
 import operator
 import json
+import math
 
 
 def is_valid_file(parser, arg):
     if not os.path.exists(arg.strip()):
-        parser.error("The file %s does not exist!" % arg)
+        if parser:
+            parser.error("The file %s does not exist!" % arg)
     else:
         return arg.strip()
 
@@ -41,7 +43,12 @@ def stats_of_sample(path, results):
     time = [datetime.strptime(t, "%Y-%m-%d %H:%M:%S:%f") for t in time]
     t_start = time[0]
     time_d = [(t - t_start).total_seconds() for t in time]
-
+    t_diff_max = [0, 0]
+    for i in range(1, len(time_d)):
+        diff = time_d[i] - time_d[i - 1]
+        if diff > t_diff_max[0]:
+            t_diff_max = [diff, i]
+        
     SAMPLE_FREQ = 1/time_d[1]
 
     # Remove elements that match regex
@@ -140,6 +147,7 @@ def garden_pressure(stats):
     p_pa = p_bar * BAR_TO_PA
     return [p_pa, "Pa"]
 
+
 def process_measurement(filepath, new_interval=False):
     # Run from script dir
     abspath = os.path.abspath(__file__)
@@ -153,7 +161,7 @@ def process_measurement(filepath, new_interval=False):
     STATS_FILE = f"{RESULTS_FOLDER}/{CSV_FILE}"
     CALC_FILE = f"{RESULTS_FOLDER}/{CALCULATIONS_FILE}"
 
-    if new_interval or not is_valid_file(None, STATS_FILE):
+    if new_interval or (not is_valid_file(None, STATS_FILE)):
         stats_of_sample(path, RESULTS_FOLDER)
 
     stats = pd.read_csv(STATS_FILE)
@@ -173,6 +181,55 @@ def process_measurement(filepath, new_interval=False):
     calculations["pipe_pressure"] = {key : [calculations["pressure"][0] - value[0], value[1]] for key, value in calculations["room_pressure"].items()}
     calculations["R_pipe"] = {key : [value[0] / calculations["flow"][0], HYDRAULIC_OHM] for key, value in calculations["pipe_pressure"].items()}
     calculations["R_appliance"] = {key : [calculations["R_total"][0] - value[0], HYDRAULIC_OHM] for key, value in calculations["R_pipe"].items()}
+
+    pipes = {
+        "main" : "main",
+        "kc" : "kc",
+        "br_1" : "br_1",
+        "br_2" : "br_2",
+        "gd_1" : "gd_1",
+        "gd_2" : "gd_2"
+    }
+    pipe_diameters = {
+        pipes["main"]   : 1.38 * 10**-3, # 1.1/4" inner diameter in meters
+        pipes["kc"]     : 0.82 * 10**-3, #   3/4" inner diameter in meters
+        pipes["br_1"]   : 1.05 * 10**-3, #     1" inner diameter in meters
+        pipes["br_2"]   : 0.82 * 10**-3, #   3/4" inner diameter in meters
+        pipes["gd_1"]   : 1.05 * 10**-3, #     1" inner diameter in meters
+        pipes["gd_2"]   : 0.82 * 10**-3, #   3/4" inner diameter in meters
+
+    }
+    pipe_area = {
+        key : value**2 * (math.pi / 2) for key, value in pipe_diameters.items()
+    }
+    pipe_lengths = {
+        pipes["main"]   : 6 , # in meters
+        pipes["kc"]     : 3 , # in meters
+        pipes["br_1"]   : 6 , # in meters
+        pipes["br_2"]   : 3 , # in meters
+        pipes["gd_1"]   : 12, # in meters
+        pipes["gd_2"]   : 3 , # in meters
+    }
+
+    calculations["pipe"] = {
+        key : {
+            "diameter" : [pipe_diameters[key], "m"],
+            "area" : [pipe_area[key], "m2"],
+            "length" : [pipe_lengths[key], "m"]
+        } for key in pipes.keys()
+    }
+
+    dynamic_viscostiy = 1.002 * 10**(-3) #N*s/m2 (20 degrees celcius)
+    density = 998.204         #kg/m³ (20 degrees celcius)
+    kin_viscosity = dynamic_viscostiy/density #10**(-6) * m2/s
+    calculations["temp"] = [273.15 + 20, "°C"]
+    calculations["density"] = [density, "kg/m3"]
+    calculations["dyn_viscosity"] = [dynamic_viscostiy, "N*s/m2"]
+    calculations["kin_viscosity"] = [kin_viscosity, "m2/s"]
+        
+    calculations["Re"] = {
+        key : (calculations["flow"][0] / pipe_area[key]) * pipe_diameters[key] / kin_viscosity for key in pipes.keys()
+    }
     
     with open(CALC_FILE, "w") as outfile: 
         json.dump(calculations, outfile, indent = 4)
