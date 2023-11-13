@@ -61,10 +61,23 @@ def calc_average(paths, output_file):
         desc = pd.DataFrame.from_dict({key : p_diff[key]}).describe()
         description.update(desc.to_dict())
 
+    calculations = {
+        "static_room_pressure_loss" : {
+            key : [value["mean"], "Pa"] for key, value in description.items()
+        }
+    }
+
+    calculations["density"] = [998.204, "kg/m3"]
+    calculations["gravity"] = [9.82, "m/s2"]
+
+    calculations["room_height"] = {
+        key : [value[0] / (calculations["density"][0] * calculations["gravity"][0]), "m"] for key, value in calculations["static_room_pressure_loss"].items()
+    }
 
     with open(output_file, "w") as file:
-        json.dump(description, file)
+        json.dump(calculations, file)
 
 
 calc_average(Of_interrest, OUTPUT_FILE)
 calc_average([path for path in Of_interrest if "20231101" in f"{path}"], f"{DATA_LOC}/20231101_{OUTPUT_FILE_NAME}")
+calc_average([path for path in Of_interrest if "20231101" not in f"{path}"], f"{DATA_LOC}/not_20231101_{OUTPUT_FILE_NAME}")

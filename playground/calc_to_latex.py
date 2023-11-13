@@ -22,30 +22,30 @@ for folder in SUB_FOLDERS:
     with open(Path(f"{folder}/{CALCULATION_FILE}"), "r") as file:
         data = json.load(file)
 
-        flow = "{:2.8f}".format(data['flow'][0] * (10**5))
-        pressure = "{:.3f}".format(data["pressure"][0])
-        r_total = "{:.6f}".format(data["R_total"][0] * 10**(-6))
-        r_pipe = [
-            "{:.6f}".format(data["R_pipe"]["kitchen"][0]*10**(-6)),
-            "{:.6f}".format(data["R_pipe"]["bathroom"][0]*10**(-6)),
-            "{:.6f}".format(data["R_pipe"]["garden"][0]*10**(-6))
-        ]
-        r_app = [
-            "{:.6f}".format(data["R_appliance"]["kitchen"][0]*10**(-6)),
-            "{:.6f}".format(data["R_appliance"]["bathroom"][0]*10**(-6)),
-            "{:.6f}".format(data["R_appliance"]["garden"][0]*10**(-6))
-        ]
+    pressure_unit = 10**(-9) #Giga
 
-        with open(Path(f"{folder}/{OUTPUT_FILE}"), "w") as out_file:
-            for i in range(3):
-                to_print = [
-                    flow,
-                    pressure,
-                    r_total,
-                    r_app[i],
-                    r_pipe[i]
-                ]
+    flow = "{:2.8f}".format(data['flow'][0] * (10**5))
+    pressure = "{:.3f}".format(data["pressure"][0])
+    r_pipe = [
+        value[0]*pressure_unit for _, value in data["R_pipe"].items()
+    ]
+    r_app = [
+        value[0]*pressure_unit for _, value in data["R_appliance"].items()
+    ]
+    r_total = [
+        value[0]*pressure_unit for _, value in data["R_total"].items()
+    ]
 
-                line = " & ".join(to_print)
-                out_file.write(line + "\\\\ \hline\n")            
+    with open(Path(f"{folder}/{OUTPUT_FILE}"), "w") as out_file:
+        for i in range(3):
+            to_print = [
+                flow,
+                pressure,
+                f"{r_total[i]:6f}",
+                f"{r_app[i]:6f}",
+                f"{r_pipe[i]:6f}"
+            ]
+
+            line = " & ".join(to_print)
+            out_file.write(line + "\\\\ \hline\n")            
 

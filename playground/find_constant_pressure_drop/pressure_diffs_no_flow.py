@@ -66,6 +66,8 @@ def stats_of_sample(path, results):
     flow_unit_start = FLOW_KEY.find("[")
     flow_unit_end = FLOW_KEY.find("]")
     flow_unit = FLOW_KEY[flow_unit_start : flow_unit_end + 1]
+    if flow_unit == "[l/m]":
+        flow_unit = "[l/min]"
 
     PRESURE_KEY = "PT0102[Bar]"
     pressure = data[PRESURE_KEY]
@@ -197,3 +199,6 @@ def run():
 
     for f in Of_interrest:
         process_measurement(Path(f"{DATA_LOC}/{f}"), False)
+
+if __name__ == "__main__":
+    run()

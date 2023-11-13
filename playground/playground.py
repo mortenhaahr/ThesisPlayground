@@ -165,6 +165,8 @@ if __name__ == "__main__":
         if unit_start != -1:
             unit_end = d.find("]")
             unit = d[unit_start : unit_end + 1]
+            if unit == "[l/m]":
+                unit = "[l/min]"
         else:
             unit_start = len(d)
             unit = "[]"

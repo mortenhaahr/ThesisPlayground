@@ -65,6 +65,8 @@ def stats_of_sample(path, results):
     flow_unit_start = FLOW_KEY.find("[")
     flow_unit_end = FLOW_KEY.find("]")
     flow_unit = FLOW_KEY[flow_unit_start : flow_unit_end + 1]
+    if flow_unit == "[l/m]":
+        flow_unit = "[l/min]"
 
     PRESURE_KEY = "PT0102[Bar]"
     pressure = data[PRESURE_KEY]
@@ -148,6 +150,8 @@ def garden_pressure(stats):
     return [p_pa, "Pa"]
 
 
+
+
 def process_measurement(filepath, new_interval=False):
     # Run from script dir
     abspath = os.path.abspath(__file__)
@@ -165,7 +169,31 @@ def process_measurement(filepath, new_interval=False):
         stats_of_sample(path, RESULTS_FOLDER)
 
     stats = pd.read_csv(STATS_FILE)
-    calculations = dict()
+    STATIC_PRESSURE_FILE = "results/stable_no_flow/average.json"
+    with open(STATIC_PRESSURE_FILE, "r") as file:
+        calculations = json.load(file)
+    
+
+    pipe_diameters = {
+        "main"   : 1.38 * 10**-3, # 1.1/4" inner diameter in meters
+        "kc"     : 0.82 * 10**-3, #   3/4" inner diameter in meters
+        "br_1"   : 1.05 * 10**-3, #     1" inner diameter in meters
+        "br_2"   : 0.82 * 10**-3, #   3/4" inner diameter in meters
+        "gd_1"   : 1.05 * 10**-3, #     1" inner diameter in meters
+        "gd_2"   : 0.82 * 10**-3, #   3/4" inner diameter in meters
+
+    }
+    pipe_area = {
+        key : value**2 * (math.pi / 2) for key, value in pipe_diameters.items()
+    }
+
+    calculations["pipe"] = {
+        key : {
+            "diameter" : [pipe_diameters[key], "m"],
+            "area" : [pipe_area[key], "m2"]
+        } for key in pipe_diameters.keys()
+    }
+
     calculations["flow"] = main_flow(stats)
     calculations["pressure"] = main_pressure(stats)
     calculations["room_pressure"] = {
@@ -174,63 +202,42 @@ def process_measurement(filepath, new_interval=False):
         "garden" : garden_pressure(stats),
     }
 
-    HYDRAULIC_OHM = "hOhm"
-    calculations[HYDRAULIC_OHM] = "kg/(m^4 * s)"
-
-    calculations["R_total"] = [calculations["pressure"][0]/calculations["flow"][0], HYDRAULIC_OHM]
-    calculations["pipe_pressure"] = {key : [calculations["pressure"][0] - value[0], value[1]] for key, value in calculations["room_pressure"].items()}
-    calculations["R_pipe"] = {key : [value[0] / calculations["flow"][0], HYDRAULIC_OHM] for key, value in calculations["pipe_pressure"].items()}
-    calculations["R_appliance"] = {key : [calculations["R_total"][0] - value[0], HYDRAULIC_OHM] for key, value in calculations["R_pipe"].items()}
-
-    pipes = {
-        "main" : "main",
-        "kc" : "kc",
-        "br_1" : "br_1",
-        "br_2" : "br_2",
-        "gd_1" : "gd_1",
-        "gd_2" : "gd_2"
-    }
-    pipe_diameters = {
-        pipes["main"]   : 1.38 * 10**-3, # 1.1/4" inner diameter in meters
-        pipes["kc"]     : 0.82 * 10**-3, #   3/4" inner diameter in meters
-        pipes["br_1"]   : 1.05 * 10**-3, #     1" inner diameter in meters
-        pipes["br_2"]   : 0.82 * 10**-3, #   3/4" inner diameter in meters
-        pipes["gd_1"]   : 1.05 * 10**-3, #     1" inner diameter in meters
-        pipes["gd_2"]   : 0.82 * 10**-3, #   3/4" inner diameter in meters
-
-    }
-    pipe_area = {
-        key : value**2 * (math.pi / 2) for key, value in pipe_diameters.items()
-    }
-    pipe_lengths = {
-        pipes["main"]   : 6 , # in meters
-        pipes["kc"]     : 3 , # in meters
-        pipes["br_1"]   : 6 , # in meters
-        pipes["br_2"]   : 3 , # in meters
-        pipes["gd_1"]   : 12, # in meters
-        pipes["gd_2"]   : 3 , # in meters
-    }
-
-    calculations["pipe"] = {
-        key : {
-            "diameter" : [pipe_diameters[key], "m"],
-            "area" : [pipe_area[key], "m2"],
-            "length" : [pipe_lengths[key], "m"]
-        } for key in pipes.keys()
-    }
-
-    dynamic_viscostiy = 1.002 * 10**(-3) #N*s/m2 (20 degrees celcius)
-    density = 998.204         #kg/m³ (20 degrees celcius)
-    kin_viscosity = dynamic_viscostiy/density #10**(-6) * m2/s
-    calculations["temp"] = [273.15 + 20, "°C"]
-    calculations["density"] = [density, "kg/m3"]
-    calculations["dyn_viscosity"] = [dynamic_viscostiy, "N*s/m2"]
-    calculations["kin_viscosity"] = [kin_viscosity, "m2/s"]
+    calculations["temp"] = [273.15 + 20, "K"]
+    calculations["density"] = [998.204, "kg/m3"]
+    calculations["dyn_viscosity"] = [1.002 * 10**(-3), "N*s/m2"]
+    calculations["kin_viscosity"] = [calculations["dyn_viscosity"][0] / calculations["density"][0], "m2/s"]
         
     calculations["Re"] = {
-        key : (calculations["flow"][0] / pipe_area[key]) * pipe_diameters[key] / kin_viscosity for key in pipes.keys()
+        key : (calculations["flow"][0] / value["area"][0]) * value["diameter"][0] / calculations["kin_viscosity"][0] for key, value in calculations["pipe"].items()
     }
+
+    HYDRAULIC_OHM = "hOhm"
+    calculations[HYDRAULIC_OHM] = "kg/(m^4 * s)"
     
+    # From: P_total - P_room = P_pipe
+    calculations["pipe_pressure"] = {key : [calculations["pressure"][0] - value[0], value[1]] for key, value in calculations["room_pressure"].items()}
+
+    p_height = calculations["static_room_pressure_loss"]
+
+    # From: (P_main - P_room) - P_height = R*Q²
+    #       P_pipe - P_height = R*Q²
+    #       R = (P_pipe - P_height)/Q²
+    # The -P_height is here because there is a height difference between the 
+    # pump and the room wich gives rise to a pressure difference.
+    calculations["R_pipe"] = {key : [(value[0] - p_height[key][0]) / (calculations["flow"][0]**2), HYDRAULIC_OHM] for key, value in calculations["pipe_pressure"].items()}
+
+    # From: (P_room - P_reservoir) - (P_height_appliance - P_height_room) = R*Q² 
+    #       P_room - 0 = R*Q²
+    #       R_room = R*Q²
+    #       R = P_room/Q²
+    # The two P_height's are assumed to be identical, which means that the room and appliance is at the same height, and thus cancels out.
+    # The hight difference between the appliance and the reservoir also gives rise to a pressure difference, but this is applied after the water exits the appliance and is thus not a part of this formula.
+    calculations["R_appliance"] = {key : [value[0] / (calculations["flow"][0]**2), HYDRAULIC_OHM] for key, value in calculations["room_pressure"].items()}
+
+    calculations["R_total"] = {
+        key : [value[0] + calculations["R_appliance"][key][0], value[1]] for key, value in calculations["R_pipe"].items()
+    }
+
     with open(CALC_FILE, "w") as outfile: 
         json.dump(calculations, outfile, indent = 4)
 
