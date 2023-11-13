@@ -2,220 +2,216 @@ import numpy as np
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
-from sklearn.metrics import r2_score
+from sklearn import metrics
 
-FLOW_SHOWER_TEST_1 = np.array(
+
+"""All measurements are based off the shower appliance and made from datasets from 2023.11.01"""
+
+# Total P = calc.json line 105 = The pressure measured at pump outlet
+TOTAL_P = np.array(
     [
-        3.53707192,  # ~2L (in (10**-5) * m3/s)
-        5.17677951,  # ~3L (in (10**-5) * m3/s)
-        6.63845366,  # ~4L (in (10**-5) * m3/s)
-        8.24241012,  # ~5L (in (10**-5) * m3/s)
-        9.96364749,  # ~6L (in (10**-5) * m3/s)
-        11.90556348,  # ~7L (in (10**-5) * m3/s)
+        # Test 1 - stable_shower_XL - 2023.11.01 around 12 O'clock:
+        387720.8904109589,
+        387727.8645833334,
+        387758.83256528416,
+        387644.4740346205,
+        387651.1627906977,
+        387616.2624821683,
+        # Test 2 - stable_shower_XL - 2023.11.01 around 13 O'clock. (1L not included):
+        339265.625,
+        339252.8363047002,
+        339203.38983050844,
+        339217.5732217573,
+        # Stable_shower_full
+        339191.5204678363,
     ]
-) * (10 ** (-5))
-
-R_PIPE_SHOWER_TEST_1 = np.array(
-    [
-        285.382325,  # in MhOhm
-        220.460624,  # in MhOhm
-        197.286520,  # in MhOhm
-        187.639841,  # in MhOhm
-        187.732639,  # in MhOhm
-        191.593376,  # in MhOhm
-    ]
-) * (10**6)
-
-
-DELTA_PRESSURE_PIPE_SHOWER_TEST_1 = (
-    FLOW_SHOWER_TEST_1 * R_PIPE_SHOWER_TEST_1
-) - 8065.01239286441
-
-PRESSURE_TOTAL_SHOWER_1 = np.array(
-    [387720.890, 387727.865, 387758.833, 387644.474, 387651.163, 387616.262]
 )
 
-FLOW_SHOWER_TEST_2 = np.array(
+# Bathroom P = calc.json line 114 = The pressure measured at the bathroom appliances
+BATHROOM_P = np.array(
     [
-        3.37029080,  # ~2L (in (10**-5) * m3/s)
-        5.14770394,  # ~3L (in (10**-5) * m3/s)
-        6.51961259,  # ~4L (in (10**-5) * m3/s)
-        8.53605300,  # ~5L (in (10**-5) * m3/s)
+        # Test 1 - stable_shower_XL - 2023.11.01 around 12 O'clock:
+        377626.7123287672,
+        376315.1041666666,
+        374662.0583717358,
+        372178.4287616511,
+        368946.1444308446,
+        364805.99144079885,
+        # Test 2 - stable_shower_XL - 2023.11.01 around 13 O'clock. (1L not included):
+        329423.1770833333,
+        328037.2771474879,
+        326418.8861985472,
+        323276.1506276151,
+        # Stable_shower_full
+        322241.2280701754,
     ]
-) * (10 ** (-5))
-
-R_PIPE_SHOWER_TEST_2 = (
-    np.array(
-        [
-            292.035569,  # in MhOhm
-            217.874984,  # in MhOhm
-            196.092996,  # in MhOhm
-            186.754026,  # in MhOhm
-        ]
-    )
-    * 10**6
 )
 
-DELTA_PRESSURE_PIPE_SHOWER_TEST_2 = (
-    FLOW_SHOWER_TEST_2 * R_PIPE_SHOWER_TEST_2
-) - 8065.01239286441
+# Flow = calc.json line 101 = The flow going out of the pump
+FLOW_MEASUREMENTS = np.array(
+    [
+        # Test 1 - stable_shower_XL - 2023.11.01 around 12 O'clock:
+        3.53707191780822e-05,
+        5.176779513888888e-05,
+        6.638453661034308e-05,
+        8.242410119840214e-05,
+        9.963647490820074e-05,
+        0.00011905563480741797,
+        # Test 2 - stable_shower_XL - 2023.11.01 around 13 O'clock. (1L not included):
+        3.3702907986111107e-05,
+        5.147703943814154e-05,
+        6.519612590799032e-05,
+        8.536052998605299e-05,
+        # Stable_shower_full
+        9.10672514619883e-05,
+    ]
+)
 
-PRESSURE_TOTAL_SHOWER_2 = np.array([339265.625, 339252.836, 339203.390, 339217.573])
+# Main pipe + bathroom pipe = calc.json line 163 = The resistance that was calculated
+CALC_RESISTANCE = np.array(
+    [
+        # Test 1 - stable_shower_XL - 2023.11.01 around 12 O'clock:
+        1650353588650.0317,
+        1262477595976.519,
+        1149861718133.747,
+        1094627207625.4003,
+        1075361957841.3368,
+        1042794943531.3098,
+        # Test 2 - stable_shower_XL - 2023.11.01 around 13 O'clock. (1L not included):
+        1596117060360.324,
+        1202360693360.6538,
+        1118697513515.0212,
+        1085853083558.3383,
+        # Stable_shower_full
+        1075676925006.1124,
+    ]
+)
+
+# The average pressure loss due to height (constant across all measurements) = calc.json line 8
+CALC_CONSTANT_HEIGHT_PRES = 8029.440882715899
 
 
-def plot_x_y(x, x_axis_name, y, y_axis_name, title):
-    print(title)
-    # Create polynomial features
-    degree = 2  # Adjust the degree as needed for your polynomial regression
-    poly = PolynomialFeatures(degree=degree)
-    x_poly = poly.fit_transform(x.reshape(-1, 1))
+def lin_reg(x, y):
+    """Calculates a 2nd degree linear regression based on X and Y"""
+
+    # Transform the features to include polynomial features up to degree 2
+    poly_features = PolynomialFeatures(degree=2, include_bias=False)
+    x_poly = poly_features.fit_transform(x.reshape(-1, 1))
 
     # Create a linear regression model
-    model = LinearRegression()
-    # Fit the model to the data
-    model.fit(x_poly, y)
+    lin_reg = LinearRegression(fit_intercept=True)
 
-    x_test = np.linspace(0, max(x) + max(x) / 2, 2000)  # Generate test data
-    x_test_poly = poly.transform(x_test.reshape(-1, 1))
-    y_pred = model.predict(x_test_poly)
+    # Fit the model to the transformed features
+    lin_reg.fit(x_poly, y)
 
-    x_real_poly = poly.transform(x.reshape(-1, 1))
-    y_pred_real_x = model.predict(x_real_poly)
+    # Make predictions using the model
+    x_new = np.linspace(0, max(x), 100).reshape(-1, 1)
+    x_new_poly = poly_features.transform(x_new)
+    y_pred = lin_reg.predict(x_new_poly)
+    # y_calc = parms_calc * x**2 + parms_const
+    # y_calc = np.multiply(parms_calc, np.linspace(0, max(x), 100))
 
-    r_squared = r2_score(y, y_pred_real_x)
-    print(f"R² value: {r_squared}")
+    # Calculate and print the scores
+    y_pred_train = lin_reg.predict(x_poly)
+    r2 = metrics.r2_score(y, y_pred_train)
+    mse = metrics.mean_absolute_error(y, y_pred_train)
+    rmse = np.sqrt(mse)
+    print(f"Scores (X^2). R2 Score: {r2}. MSE: {mse}. RMSE: {rmse}")
 
-    # Print the equation of the polynomial regression
-    equation = f"y = "
-    for i, coeff in enumerate(model.coef_):
-        equation += f" + {coeff:e}x^{i}" if i > 0 else f"{model.intercept_}"
+    # Retrieve the coefficients
+    coef = lin_reg.coef_
+    intercept = lin_reg.intercept_
 
-    print("Polynomial Regression Equation:")
-    print(equation)
+    # Print the regression equation
+    print(
+        f"Regression Equation: y = {coef[1]:.2f} * X^2 + {coef[0]:.2f} * X + {intercept:.2f}"
+    )
 
     # Plot the original data and the regression curve
-    plt.scatter(x, y, label="Data points")
-    plt.plot(
-        x_test, y_pred, color="red", label=f"Polynomial Regression (degree {degree})"
-    )
-    plt.title(title)
-    plt.xlabel(x_axis_name)
-    plt.ylabel(y_axis_name)
+    plt.scatter(x, y, label="Original Data")
+    # plt.scatter(x, y_calc, label="Calc data")
+    plt.plot(x_new, y_pred, "r-", label="Regression Curve", linewidth=2)
+    plt.xlabel("Flow [m3/s]")
+    plt.ylabel("Pressure loss over pipes [Pa]")
     plt.legend()
     plt.show()
-    print("")
 
 
-def plot_flow_to_pipe_pressure(both_sample_sets=True):
-    x = FLOW_SHOWER_TEST_1
-    y = DELTA_PRESSURE_PIPE_SHOWER_TEST_1
-    if both_sample_sets:
-        x = np.hstack((x, FLOW_SHOWER_TEST_2))
-        y = np.hstack((y, DELTA_PRESSURE_PIPE_SHOWER_TEST_2))
+def lin_reg_no_x1(x, y):
+    """Calculates a 2nd degree linear regression without the a1 term based on x and y"""
 
-    plot_x_y(
-        x,
-        "Flow [m3/s]",
-        y,
-        "Pressure difference pipe [Pa]",
-        "Pressure drop in pipe over flow",
-    )
+    # Use only the X^2 term for linear regression
+    x_squared = x**2
 
+    # Create a linear regression model with a bias term
+    lin_reg = LinearRegression(fit_intercept=True)
 
-def plot_flow_squared_to_pipe_pressure(both_sample_sets=True):
-    x = FLOW_SHOWER_TEST_1
-    y = DELTA_PRESSURE_PIPE_SHOWER_TEST_1
-    if both_sample_sets:
-        x = np.hstack((x, FLOW_SHOWER_TEST_2))
-        y = np.hstack((y, DELTA_PRESSURE_PIPE_SHOWER_TEST_2))
+    # Reshape X_squared to have a single feature (required by scikit-learn)
+    x_squared = x_squared.reshape(-1, 1)
 
-    plot_x_y(
-        x * x,
-        "Flow [m3/s]",
-        y,
-        "Pressure difference pipe [Pa]",
-        "Pressure drop in pipe over flow",
-    )
+    # Fit the model to the X^2 term
+    lin_reg.fit(x_squared, y)
 
+    # Make predictions using the model
+    x_new = np.linspace(0, max(x), 100).reshape(-1, 1)
+    x_new_squared = x_new**2
+    y_pred = lin_reg.predict(x_new_squared)
 
-def plot_resistance_to_flow(both_sample_sets=True):
-    x = FLOW_SHOWER_TEST_1
-    y = R_PIPE_SHOWER_TEST_1
-    if both_sample_sets:
-        x = np.hstack((x, FLOW_SHOWER_TEST_2))
-        y = np.hstack((y, R_PIPE_SHOWER_TEST_2))
+    # Calculate and print the scores
+    y_pred_train = lin_reg.predict(x_squared)
+    r2 = metrics.r2_score(y, y_pred_train)
+    mse = metrics.mean_absolute_error(y, y_pred_train)
+    rmse = np.sqrt(mse)
+    print(f"Scores (X^2). R2 Score: {r2}. MSE: {mse}. RMSE: {rmse}")
 
-    plot_x_y(x, "Flow [m3/s]", y, "Resistance pipe [MhOhm]", "Resistance over flow")
+    # Retrieve the coefficients
+    coef = lin_reg.coef_
+    intercept = lin_reg.intercept_
 
+    # Print the regression equation
+    print(f"Regression Equation (X^2): y = {coef[0]:.2f} * X^2 + {intercept:.2f}")
 
-def plot_resistance_to_flow_squared(both_sample_sets=True):
-    x = FLOW_SHOWER_TEST_1
-    y = R_PIPE_SHOWER_TEST_1
-    if both_sample_sets:
-        x = np.hstack((x, FLOW_SHOWER_TEST_2))
-        y = np.hstack((y, R_PIPE_SHOWER_TEST_2))
-    plot_x_y(
-        x * x, "Flow² [m3/s]", y, "Resistance pipe [MhOhm]", "Resistance over flow"
-    )
+    # Calculate residuals (deviation from the regression)
+    # y_pred_residuals = lin_reg.predict(x_squared)
+    # residuals = y - y_pred_residuals
+    # plt.scatter(x, residuals, label='Residuals', color='green', marker='x')
+    # plt.axhline(0, color='black', linestyle='--', linewidth=1)  # Horizontal line at y=0
+
+    # # Plot the original data and the regression curve
+    plt.scatter(x, y, label="Original Data")
+    plt.plot(x_new, y_pred, "r-", label="Regression Curve (X^2 Term Only)", linewidth=2)
+    plt.xlabel("Flow [m3/s]")
+    plt.ylabel("Pressure loss over pipes [Pa]")
+    plt.legend()
+    plt.show()
 
 
-def plot_flow_to_resistance(both_sample_sets=True):
-    x = FLOW_SHOWER_TEST_1
-    y = R_PIPE_SHOWER_TEST_1
-    if both_sample_sets:
-        x = np.hstack((x, FLOW_SHOWER_TEST_2))
-        y = np.hstack((y, R_PIPE_SHOWER_TEST_2))
+if __name__ == "__main__":
+    measured_flow = FLOW_MEASUREMENTS
+    measured_pressure = TOTAL_P - BATHROOM_P
+    calc_resistance = CALC_RESISTANCE
+    calc_constant_loss = CALC_CONSTANT_HEIGHT_PRES
 
-    plot_x_y(y, "Resistance pipe [MhOhm]", x, "Flow [m3/s]", "Resistance over flow")
+    ### Playground for finding the first resistance value:
+    # (This can be made comparable to the regression X^2 constant, by `press1 = saying measured_pressure[0] - regression_constant` instead)
+    # flow1 = measured_flow[0]
+    # press1 = measured_pressure[0] - calc_constant_loss
+    # res1 = press1/(flow1**2)
+    # print(f"Press1: {press1}. Flow1: {flow1}. Resistance 1: {res1}")
+    # lin_reg_p = 996769707605.53 * flow1**2
+    # print(f"LinReg P: {lin_reg_p}")
 
+    ### Comparison to Bathroom leakage:
+    # LEAKAGE_F = 0.00022462993197278912
+    # LEAKAGE_TOTAL_P = 338972.7891156463
+    # LEAKAGE_BATHROOM_P = 282530.612244898
 
-def plot_flow_to_resistance_squared(both_sample_sets=True):
-    flow = PRESSURE_TOTAL_SHOWER_1
-    x = DELTA_PRESSURE_PIPE_SHOWER_TEST_1
-    y = R_PIPE_SHOWER_TEST_1
-    if both_sample_sets:
-        flow = np.hstack((flow, PRESSURE_TOTAL_SHOWER_2))
-        x = np.hstack((x, DELTA_PRESSURE_PIPE_SHOWER_TEST_2))
-        y = np.hstack((y, R_PIPE_SHOWER_TEST_2))
+    # REG_SAYS_P = 996769707605.53 * LEAKAGE_F**2 + 8697.55
+    # print(f"Reg p: {REG_SAYS_P}. Actual P = {LEAKAGE_TOTAL_P - LEAKAGE_BATHROOM_P}")
 
-    plot_x_y(
-        (flow) / (y * y),
-        "Resistance pipe [MhOhm]",
-        x,
-        "Flow [m3/s]",
-        "Resistance over flow",
-    )
+    lin_reg(measured_flow, measured_pressure)
+    lin_reg_no_x1(measured_flow, measured_pressure)
 
-
-def plot_test():
-    flow = np.hstack((FLOW_SHOWER_TEST_1, FLOW_SHOWER_TEST_2))
-    pressure = np.hstack((PRESSURE_TOTAL_SHOWER_1, PRESSURE_TOTAL_SHOWER_2))
-    resistance = np.hstack((R_PIPE_SHOWER_TEST_1, R_PIPE_SHOWER_TEST_2))
-    dpipe_pressure = np.hstack(
-        (DELTA_PRESSURE_PIPE_SHOWER_TEST_1, DELTA_PRESSURE_PIPE_SHOWER_TEST_2)
-    )
-
-    tests = [
-        (flow, "flow"),
-        (pressure, "pressure"),
-        (resistance, "resistance"),
-        (dpipe_pressure, "pipe_pressure"),
-    ]
-
-    for i in range(len(tests)):
-        for j in range(len(tests)):
-            if i == j:
-                continue
-            x, name_x = tests[i]
-            y, name_y = tests[j]
-            plot_x_y(x, name_x, y, name_y, f"{name_y} over {name_x}")
-            plot_x_y(x * x, f"{name_x}²", y, name_y, f"{name_y} over {name_x}²")
-            plot_x_y(x, f"{name_x}", y * y, f"{name_y}²", f"{name_y}² over {name_x}")
-            plot_x_y(
-                x * x, f"{name_x}²", y * y, f"{name_y}²", f"{name_y}² over {name_x}²"
-            )
-
-
-plot_test()
-
-x = 42
+    # When constant drop is taken off:
+    # lin_reg(measured_flow, measured_pressure - calc_constant_loss)
+    # lin_reg_no_x1(measured_flow, measured_pressure - calc_constant_loss)
