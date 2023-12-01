@@ -117,7 +117,8 @@ if __name__ == "__main__":
                     "min_pressure[bar]": float_2_decimals(time_constant_p) # Sample must be less-than this pressure to be used for tau
                 },
             },
-            outfile
+            outfile,
+            indent=4,
         )
 
     plt.axis('auto') # Reset zoom
