@@ -113,9 +113,10 @@ if __name__ == "__main__":
                     "discharge_time[s]": float_2_decimals(tau_sample_t - step_start_time), # Actual tau value
                     "sample_time[s]": tau_sample_t, # The time of the sample that was used
                     "sample_pressure[bar]": tau_sample_p,
-                    "sample": round(float(tau_sample_t) * SAMPLE_FREQ),
+                    "sample[ ]": round(float(tau_sample_t) * SAMPLE_FREQ),
                     "min_pressure[bar]": float_2_decimals(time_constant_p) # Sample must be less-than this pressure to be used for tau
                 },
+                "sample_diff[ ]": round(float(tau_sample_t) * SAMPLE_FREQ) - step_start_sample
             },
             outfile,
             indent=4,
