@@ -20,7 +20,7 @@
             "program": "${file}",
             "console": "integratedTerminal",
             "justMyCode": true,
-            "args": ["-f ../testdata/20230918_1129_steady_half_show_steady.csv"]
+            "args": ["-f ../../testdata/20231127_0646_dyn_KSink.csv", "-s 21.0"]
         },
         {
             "name": "New interval",

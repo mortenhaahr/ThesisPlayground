@@ -5,15 +5,6 @@ import json
 # assign directory
 directory = "../../testdata/dyn_tmp"
 
-"""
-NOTE: The following have not been generated, as they can't be determined by PT0102:
-../../testdata/dyn_tmp/20231127_1202_dyn_BSink_no_main.csv
-../../testdata/dyn_tmp/20231127_0753_dyn_GHose_no_main.csv
-../../testdata/dyn_tmp/20231127_0739_dyn_BSink_no_main.csv
-../../testdata/dyn_tmp/20231127_1200_dyn_KSink_no_main.csv
-../../testdata/dyn_tmp/20231127_0749_dyn_GHose_no_main_high_flow.csv
-"""
-
 RERUN_EXISTING = False
 
 # Map of files that requires other sensors
@@ -29,6 +20,7 @@ REQUIRES_OTHER_SENSORS_MAP = {
     (
         "20231127_0753_dyn_GHose_no_main.csv",
         "20231127_0749_dyn_GHose_no_main_high_flow.csv",
+        "20231127_1204_dyn_GHose_no_main.csv",
     ): "PT0203[Bar]",
 }
 
@@ -67,7 +59,9 @@ if __name__ == "__main__":
         results_exists = os.path.exists(results_folder)
         if RERUN_EXISTING and results_exists:
             step_time = find_step_time_from_results(results_folder)
-            os.system(f"python find_time_constant.py -f {file} -s {step_time} -p {sensor}")
+            os.system(
+                f"python find_time_constant.py -f {file} -s {step_time} -p {sensor}"
+            )
         elif (not RERUN_EXISTING) and results_exists:
             print(f"Skipping {file}, the result folder already exists.")
             continue
