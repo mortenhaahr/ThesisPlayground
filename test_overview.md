@@ -645,3 +645,30 @@ This sample was subject to a logging error. No noticable difference in the data 
     - Takes 5 seconds
 - No flow for rest of sample
 
+# Tests done on 27/11/2023
+- Note that the leakage weight stopped working at some point, as the valve was always open.
+
+### Dyn tests:
+- On the 27th of November we performed an additional 59 tests for determining the dynamic properties of the system
+- Most follow the naming convention: `date_dyn_roomLetter_appliance_otherInfo`
+  - Most are done in the format:
+    - Start test. Go turn valve to pump. Wait for 20 sec mark.
+    - Turn on appliance. Wait for 40 sec mark.
+    - Turn on pump valve again. Wait for 60 sec mark.
+    - Turn off appliance. Wait for 80 sec mark.
+    - Stop test.
+- Special cases:
+  - The ones ending in `sweep` are a series of sweeps done with the specific appliance. The following numbers are the liters/min.
+  - Toilets are a bit different as I cannot manually turn off. With big flush I had to wait a bit longer (should be visible in tests). A flush is considered a single tap.
+
+### Stable tests:
+- On the 27th of November we performed an additional 17 tests for determining the remaining static properties of the system
+- These are done with the small leakages of the system (except `playground/results/20231127_1449_stable_K_wsm`).
+- The tests follow the naming convention: `date_stable_roomLetter_appliance_otherInfo`
+    - Most are done in the format:
+      - Set leakage to desired flow. Turn off valve.
+      - Wait until pump stops doing work.
+      - Start test. Wait for 10 sec mark.
+      - Turn on leak valve. Wait for 70 sec mark.
+      - Turn off leak valve. Wait for 80 sec mark.
+      - Stop test.
