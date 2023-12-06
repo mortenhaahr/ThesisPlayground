@@ -1,6 +1,7 @@
 .vscode
 playground/results
 !playground/results/data_stats
+!playground/results/dynamic_props
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
