@@ -1,0 +1,15 @@
+{
+    "step_start": {
+        "time[s]": 20.76,
+        "sample[ ]": 173,
+        "pressure[bar]": 3.75
+    },
+    "tau": {
+        "discharge_time[s]": 1.68,
+        "sample_time[s]": 22.44,
+        "sample_pressure[bar]": 1.35,
+        "sample[ ]": 187,
+        "min_pressure[bar]": 1.38
+    },
+    "sample_diff[ ]": 14
+}
