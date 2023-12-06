@@ -25,6 +25,21 @@ def is_positive_float(parser, arg):
         raise parser.error("Invalid floating-point number.")
 
 
+def is_valid_pressure_sensor(parser, arg):
+    VALID_SENSORS = [
+        "PT0101[Bar]",
+        "PT0102[Bar]",
+        "PT0201[Bar]",
+        "PT0202[Bar]",
+        "PT0203[Bar]",
+        "outlet_pressure[Bar]",
+        "PT0106",
+    ]
+    if arg not in VALID_SENSORS:
+        parser.error(f"The sensor {arg} is not valid for this script")
+    return arg
+
+
 def float_2_decimals(number: float):
     """Converts the float to a string with 2 decimals and then back to float"""
     return float(f"{number:0.2f}")
@@ -55,10 +70,19 @@ if __name__ == "__main__":
         type=lambda x: is_positive_float(parser, x),
     )
 
+    parser.add_argument(
+        "-p",
+        dest="pressure_sensor",
+        default="PT0102[Bar]",
+        help="The sensor data to use for step",
+        type=lambda x: is_valid_pressure_sensor(parser, x),
+    )
+
     args = parser.parse_args()
 
     path = Path(args.filepath)
     step_start_raw = args.step_time
+    pressure_sensor = args.pressure_sensor
 
     data = pd.read_csv(f"{path}", delimiter=";")
     try:
@@ -87,28 +111,27 @@ if __name__ == "__main__":
 
     SAMPLE_FREQ = 1 / time_d[1]
 
-    PRESURE_KEY = "PT0102[Bar]"
-    pressure = data[PRESURE_KEY]
-    pressure_unit_start = PRESURE_KEY.find("[")
-    pressure_unit_end = PRESURE_KEY.find("]")
-    pressure_unit = PRESURE_KEY[pressure_unit_start : pressure_unit_end + 1]
+    pressure = data[pressure_sensor]
+    pressure_unit_start = pressure_sensor.find("[")
+    pressure_unit_end = pressure_sensor.find("]")
+    pressure_unit = pressure_sensor[pressure_unit_start : pressure_unit_end + 1]
 
-    unit_start = PRESURE_KEY.find("[")
-    unit_end = PRESURE_KEY.find("]")
-    unit = PRESURE_KEY[unit_start : unit_end + 1]
-    title = f"{PRESURE_KEY[:unit_start]}_{t_start.strftime('%Y-%m-%d-%H-%M-%S')}"
+    unit_start = pressure_sensor.find("[")
+    unit_end = pressure_sensor.find("]")
+    unit = pressure_sensor[unit_start : unit_end + 1]
+    title = f"{pressure_sensor[:unit_start]}_{t_start.strftime('%Y-%m-%d-%H-%M-%S')}"
 
     _, ax = plt.subplots(figsize=(13.66, 7.68))
     ax.set_title(title)
     ax.set_xlabel("Time [s]")
     ax.set_ylabel(f"Pressure {unit}")
-    ax.plot(time_d, pressure, label=PRESURE_KEY[:unit_start])
+    ax.plot(time_d, pressure, label=pressure_sensor[:unit_start])
     plt.grid()
     plt.show(block=False)
 
     # Hack the figure to be zoomed around 20..23 to easier determine step time
     # plt.axis([20.1, 23, plt.axis()[2], plt.axis()[3]])
-    
+
     if not step_start_raw:
         step_start_raw = input("Enter step start time[s]:")
     step_start_sample = round(float(step_start_raw) * SAMPLE_FREQ)
@@ -127,7 +150,7 @@ if __name__ == "__main__":
 
     ax.axvline(x=step_start_time, color="g", label="Step start")
     ax.axvline(x=tau_sample_t, color="r", label="Time constant")
-    ax.legend(loc='center right')
+    ax.legend(loc="center right")
 
     plt.text(
         tau_sample_t + 1,
