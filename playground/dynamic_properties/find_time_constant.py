@@ -104,7 +104,6 @@ if __name__ == "__main__":
     ax.set_ylabel(f"Pressure {unit}")
     ax.plot(time_d, pressure, label=PRESURE_KEY[:unit_start])
     plt.grid()
-    ax.legend()
     plt.show(block=False)
 
     # Hack the figure to be zoomed around 20..23 to easier determine step time
@@ -126,8 +125,9 @@ if __name__ == "__main__":
         if p < time_constant_p
     )
 
-    ax.axvline(x=step_start_time, color="b")
-    ax.axvline(x=tau_sample_t, color="r")
+    ax.axvline(x=step_start_time, color="g", label="Step start")
+    ax.axvline(x=tau_sample_t, color="r", label="Time constant")
+    ax.legend(loc='center right')
 
     plt.text(
         tau_sample_t + 1,
