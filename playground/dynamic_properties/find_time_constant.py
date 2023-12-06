@@ -15,6 +15,16 @@ def is_valid_file(parser, arg):
         return arg.strip()
 
 
+def is_positive_float(parser, arg):
+    try:
+        float_value = float(arg)
+        if float_value <= 0:
+            raise parser.error("Value must be a positive floating-point number.")
+        return float_value
+    except ValueError:
+        raise parser.error("Invalid floating-point number.")
+
+
 def float_2_decimals(number: float):
     """Converts the float to a string with 2 decimals and then back to float"""
     return float(f"{number:0.2f}")
@@ -37,9 +47,18 @@ if __name__ == "__main__":
         type=lambda x: is_valid_file(parser, x),
     )
 
+    parser.add_argument(
+        "-s",
+        dest="step_time",
+        required=False,
+        help="The step time in seconds",
+        type=lambda x: is_positive_float(parser, x),
+    )
+
     args = parser.parse_args()
 
     path = Path(args.filepath)
+    step_start_raw = args.step_time
 
     data = pd.read_csv(f"{path}", delimiter=";")
     try:
@@ -74,15 +93,25 @@ if __name__ == "__main__":
     pressure_unit_end = PRESURE_KEY.find("]")
     pressure_unit = PRESURE_KEY[pressure_unit_start : pressure_unit_end + 1]
 
+    unit_start = PRESURE_KEY.find("[")
+    unit_end = PRESURE_KEY.find("]")
+    unit = PRESURE_KEY[unit_start : unit_end + 1]
+    title = f"{PRESURE_KEY[:unit_start]}_{t_start.strftime('%Y-%m-%d-%H-%M-%S')}"
+
     _, ax = plt.subplots(figsize=(13.66, 7.68))
-    ax.plot(time_d, pressure)
+    ax.set_title(title)
+    ax.set_xlabel("Time [s]")
+    ax.set_ylabel(f"Pressure {unit}")
+    ax.plot(time_d, pressure, label=PRESURE_KEY[:unit_start])
     plt.grid()
+    ax.legend()
     plt.show(block=False)
 
     # Hack the figure to be zoomed around 20..23 to easier determine step time
     # plt.axis([20.1, 23, plt.axis()[2], plt.axis()[3]])
-
-    step_start_raw = input("Enter step start time[s]:")
+    
+    if not step_start_raw:
+        step_start_raw = input("Enter step start time[s]:")
     step_start_sample = round(float(step_start_raw) * SAMPLE_FREQ)
     step_start_time = float(step_start_raw)
 
