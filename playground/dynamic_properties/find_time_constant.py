@@ -13,7 +13,8 @@ def is_valid_file(parser, arg):
         parser.error("The file %s does not exist!" % arg)
     else:
         return arg.strip()
-    
+
+
 def float_2_decimals(number: float):
     """Converts the float to a string with 2 decimals and then back to float"""
     return float(f"{number:0.2f}")
@@ -99,7 +100,12 @@ if __name__ == "__main__":
     ax.axvline(x=step_start_time, color="b")
     ax.axvline(x=tau_sample_t, color="r")
 
-    plt.text(tau_sample_t + 1, step_start_p / 2, f"tau = {tau_sample_t:0.2f} - {step_start_time:0.2f} = {(tau_sample_t - step_start_time):0.2f}", verticalalignment="center")
+    plt.text(
+        tau_sample_t + 1,
+        step_start_p / 2,
+        f"tau = {tau_sample_t:0.2f} - {step_start_time:0.2f} = {(tau_sample_t - step_start_time):0.2f}",
+        verticalalignment="center",
+    )
 
     with open(CALC_FILE, "w") as outfile:
         json.dump(
@@ -107,20 +113,25 @@ if __name__ == "__main__":
                 "step_start": {
                     "time[s]": float_2_decimals(step_start_time),
                     "sample[ ]": step_start_sample,
-                    "pressure[bar]": step_start_p
+                    "pressure[bar]": step_start_p,
                 },
                 "tau": {
-                    "discharge_time[s]": float_2_decimals(tau_sample_t - step_start_time), # Actual tau value
-                    "sample_time[s]": tau_sample_t, # The time of the sample that was used
+                    "discharge_time[s]": float_2_decimals(
+                        tau_sample_t - step_start_time
+                    ),  # Actual tau value
+                    "sample_time[s]": tau_sample_t,  # The time of the sample that was used
                     "sample_pressure[bar]": tau_sample_p,
                     "sample[ ]": round(float(tau_sample_t) * SAMPLE_FREQ),
-                    "min_pressure[bar]": float_2_decimals(time_constant_p) # Sample must be less-than this pressure to be used for tau
+                    "min_pressure[bar]": float_2_decimals(
+                        time_constant_p
+                    ),  # Sample must be less-than this pressure to be used for tau
                 },
-                "sample_diff[ ]": round(float(tau_sample_t) * SAMPLE_FREQ) - step_start_sample
+                "sample_diff[ ]": round(float(tau_sample_t) * SAMPLE_FREQ)
+                - step_start_sample,
             },
             outfile,
             indent=4,
         )
 
-    plt.axis('auto') # Reset zoom
+    plt.axis("auto")  # Reset zoom
     plt.savefig(f"{RESULTS_FOLDER}/interval.png", dpi=400)
